@@ -20,5 +20,16 @@ class DatabaseSeeder extends Seeder
         //     'name' => 'Test User',
         //     'email' => 'test@example.com',
         // ]);
+
+        \App\Models\UserRoles::insert([
+            [
+                "name"=> "Default",
+                "slug"=> "DEFAULT"
+            ],
+            [
+                "name"=> "Student",
+                "slug"=> "STUDENT"
+            ],
+        ]);
     }
 }

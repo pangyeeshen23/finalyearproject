@@ -8,4 +8,17 @@ use Illuminate\Database\Eloquent\Model;
 class UserTravelPlan extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'id',
+        'user_id',
+        'travel_plan_id',
+        'rate',
+        'created_at',
+        'updated_at'
+    ];
+
+    protected $hidden = [];
+
+    protected $casts = [];
 }
