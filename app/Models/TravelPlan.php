@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Encore\Admin\Auth\Database\Administrator;
 
 class TravelPlan extends Model
 {
@@ -14,8 +15,10 @@ class TravelPlan extends Model
         'name',
         'description',
         'meeting_point',
-        'lat',
-        'long',
+        'depart_lat',
+        'depart_long',
+        'destination_lat',
+        'destination_long',
         'fees',
         'is_student',
         'created_at',
@@ -26,5 +29,8 @@ class TravelPlan extends Model
 
     protected $casts = [];
 
+    public function admins(){
+        return $this->belongsTo(Admin::class. 'creator_id');
+    }
 
 }

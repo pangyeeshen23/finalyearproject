@@ -18,8 +18,10 @@ return new class extends Migration
             $table->string('name');
             $table->string('description');
             $table->string('meeting_point');
-            $table->decimal('lat');
-            $table->decimal('long');
+            $table->decimal('depart_lat');
+            $table->decimal('depart_long');
+            $table->decimal('destination_lat');
+            $table->decimal('destination_long');
             $table->decimal('fees');
             $table->boolean('is_student');
             $table->unsignedInteger('creator_id');

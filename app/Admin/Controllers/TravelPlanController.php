@@ -30,9 +30,8 @@ class TravelPlanController extends AdminController
         $grid->column('name', __('Name'));
         $grid->column('description', __('Description'));
         $grid->column('meeting_point', __('Meeting point'));
-        $grid->column('lat', __('Lat'));
-        $grid->column('long', __('Long'));
         $grid->column('fees', __('Fees'));
+        $grid->column('lat', __('Fees'));
         $grid->column('is_student', __('Is student'));
         $grid->column('creator_id', __('Creator id'));
         $grid->column('created_at', __('Created at'));
@@ -55,11 +54,14 @@ class TravelPlanController extends AdminController
         $show->field('name', __('Name'));
         $show->field('description', __('Description'));
         $show->field('meeting_point', __('Meeting point'));
-        $show->field('lat', __('Lat'));
-        $show->field('long', __('Long'));
+        $show->field('depart', __('Depart'))->latlong('depart_lat', 'depart_long', $height = 400, $zoom = 10);
+        $show->field('destination', __('Destination'))->latlong('destination_lat', 'destination_long', $height = 400, $zoom = 10);
         $show->field('fees', __('Fees'));
-        $show->field('is_student', __('Is student'));
-        $show->field('creator_id', __('Creator id'));
+        $show->field('is_student', __('For student only ?'));
+        $show->admins('Creator Information', function($creator){
+            $creator->id();
+            $creator->name();
+        });
         $show->field('created_at', __('Created at'));
         $show->field('updated_at', __('Updated at'));
 
@@ -75,14 +77,13 @@ class TravelPlanController extends AdminController
     {
         $form = new Form(new TravelPlan());
 
-        $form->text('name', __('Name'));
-        $form->text('description', __('Description'));
-        $form->text('meeting_point', __('Meeting point'));
-        $form->decimal('lat', __('Lat'));
-        $form->decimal('long', __('Long'));
-        $form->decimal('fees', __('Fees'));
-        $form->switch('is_student', __('Is student'));
-        $form->number('creator_id', __('Creator id'));
+        $form->text('name', __('Name'))->required();
+        $form->text('description', __('Description'))->required();
+        $form->text('meeting_point', __('Meeting point'))->required();
+        $form->latlong('depart_lat', 'depart_long', 'Depart')->default(['lat' => 3.1569, 'lng' => 101.7123])->required();
+        $form->latlong('destination_lat', 'destination_long', 'Destination')->default(['lat' => 3.1569, 'lng' => 101.7123])->required();
+        $form->decimal('fees', __('Fees'))->required();
+        $form->switch('is_student', __('Is student'))->required();
 
         return $form;
     }

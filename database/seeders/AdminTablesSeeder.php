@@ -16,6 +16,7 @@ class AdminTablesSeeder extends Seeder
     public function run()
     {
         // base tables
+        \Encore\Admin\Auth\Database\Menu::truncate();
         \Encore\Admin\Auth\Database\Menu::insert(
             [
                 [
@@ -73,10 +74,19 @@ class AdminTablesSeeder extends Seeder
                     "permission" => NULL,
                     "title" => "Operation log",
                     "uri" => "auth/logs"
+                ],
+                [
+                    "icon" => "fa-map",
+                    "order" => 8,
+                    "parent_id" => 0,
+                    "permission" => "plans",
+                    "title" => "Travel Plans",
+                    "uri" => "plans"
                 ]
             ]
         );
 
+        \Encore\Admin\Auth\Database\Permission::truncate();
         \Encore\Admin\Auth\Database\Permission::insert(
             [
                 [
@@ -108,20 +118,30 @@ class AdminTablesSeeder extends Seeder
                     "http_path" => "/auth/roles\r\n/auth/permissions\r\n/auth/menu\r\n/auth/logs",
                     "name" => "Auth management",
                     "slug" => "auth.management"
+                ],
+                [
+                    "http_method" => "",
+                    "http_path" => "/plans*",
+                    "name" => "Plans",
+                    "slug" => "plans"
                 ]
             ]
         );
 
+        \Encore\Admin\Auth\Database\Role::truncate();
         \Encore\Admin\Auth\Database\Role::insert(
             [
                 [
                     "name" => "Administrator",
                     "slug" => "administrator"
+                ],
+                [
+                    "name" => "Driver",
+                    "slug" => "driver"
                 ]
             ]
         );
 
-        
         DB::table('admin_users')->insert(
             [
                 [
@@ -142,20 +162,42 @@ class AdminTablesSeeder extends Seeder
         );
 
         // pivot tables
+        DB::table('admin_role_menu')->truncate();
         DB::table('admin_role_menu')->insert(
             [
                 [
                     "menu_id" => 2,
                     "role_id" => 1
+                ],
+                [
+                    "menu_id" => 8,
+                    "role_id" => 1
+                ],
+                [
+                    "menu_id" => 8,
+                    "role_id" => 2
                 ]
             ]
         );
 
+        DB::table('admin_role_permissions')->truncate();
         DB::table('admin_role_permissions')->insert(
             [
                 [
                     "permission_id" => 1,
                     "role_id" => 1
+                ],
+                [
+                    "permission_id" => 2,
+                    "role_id" => 2
+                ],
+                [
+                    "permission_id" => 3,
+                    "role_id" => 2
+                ],
+                [
+                    "permission_id" => 6,
+                    "role_id" => 2
                 ]
             ]
         );
