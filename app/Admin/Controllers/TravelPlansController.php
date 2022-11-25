@@ -2,7 +2,7 @@
 
 namespace App\Admin\Controllers;
 
-use App\Models\TravelPlan;
+use App\Models\TravelPlans;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
@@ -15,7 +15,7 @@ class TravelPlanController extends AdminController
      *
      * @var string
      */
-    protected $title = 'TravelPlan';
+    protected $title = 'TravelPlans';
 
     /**
      * Make a grid builder.
@@ -24,7 +24,7 @@ class TravelPlanController extends AdminController
      */
     protected function grid()
     {
-        $grid = new Grid(new TravelPlan());
+        $grid = new Grid(new TravelPlans());
 
         $grid->column('id', __('Id'));
         $grid->column('name', __('Name'));
@@ -48,7 +48,7 @@ class TravelPlanController extends AdminController
      */
     protected function detail($id)
     {
-        $show = new Show(TravelPlan::findOrFail($id));
+        $show = new Show(TravelPlans::findOrFail($id));
 
         $show->field('id', __('Id'));
         $show->field('name', __('Name'));
@@ -75,7 +75,7 @@ class TravelPlanController extends AdminController
      */
     protected function form()
     {
-        $form = new Form(new TravelPlan());
+        $form = new Form(new TravelPlans());
 
         $form->text('name', __('Name'))->required();
         $form->text('description', __('Description'))->required();
