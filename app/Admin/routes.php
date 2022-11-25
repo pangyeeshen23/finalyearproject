@@ -13,7 +13,7 @@ Route::group([
 
     $router->get('/', 'HomeController@index')->name('home');
 
-    $router->resource('plans', TravelPlanController::class);
+    $router->resource('plans', TravelPlansController::class);
     $router->resource('users', UserController::class);
     $router->resource('drivers', DriverController::class);
     $router->resource('user-roles', UserRolesController::class);
