@@ -1,4 +1,6 @@
 <?php
+Use Encore\Admin\Admin;
+Use Encore\Admin\Form;
 
 /**
  * Laravel-admin - admin builder based on Laravel.
@@ -18,4 +20,7 @@
  *
  */
 
-Encore\Admin\Form::forget(['map', 'editor']);
+Form::forget(['map', 'editor']);
+
+Admin::favicon('storage/favicon.ico');
+

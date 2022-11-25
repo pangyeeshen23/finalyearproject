@@ -105,11 +105,15 @@ class DriverController extends AdminController
         $form->text('identity_card_number', __('Identity card number'))->required();
         $form->text('age', __('Age'))->required();
         $form->date('birthday', __('Birthday'))->default(date('Y-m-d'))->required();
-        $form->switch('is_approved', __('Is approved'))->required();
+        $form->switch('is_approved', __('Is approved'));
         $form->multipleSelect('roles', trans('admin.roles'))
         ->options($roleModel::all()->pluck('name', 'id'))
         ->default($driverRole->id)
         ->disable()->required();
+
+        // $form->saving(function(Form $form){
+        //     dd($form);
+        // });
 
         return $form;
     }
