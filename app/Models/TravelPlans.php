@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Encore\Admin\Auth\Database\Administrator;
 
-class TravelPlan extends Model
+class TravelPlans extends Model
 {
     use HasFactory;
 
