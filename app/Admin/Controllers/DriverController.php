@@ -70,7 +70,7 @@ class DriverController extends AdminController
         $show->field('identity_card_number', __('Identity card number'));
         $show->field('age', __('Age'));
         $show->field('birthday', __('Birthday'));
-        $show->field('is_approved', __('Is approved'));
+        $show->field('is_approved', __('Is approved'))->using([0 => "No", 1 => "Yes"]);
 
         $show->field('roles', 'Roles')->as(function ($roles) {
             return $roles->pluck('name');
