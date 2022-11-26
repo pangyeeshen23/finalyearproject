@@ -14,12 +14,12 @@ return new class extends Migration
     public function up()
     {
         Schema::table('admin_users', function(Blueprint $table){
-            $table->string('email_address');
-            $table->string('phone_number');
-            $table->string('identity_card_number');
-            $table->string('age');
+            $table->string('email_address')->nullable();
+            $table->string('phone_number')->nullable();
+            $table->string('identity_card_number')->nullable();
+            $table->string('age')->nullable();
             $table->date('birthday')->nullable();
-            $table->boolean('is_approved');
+            $table->boolean('is_approved')->nullable();
         });
     }
 

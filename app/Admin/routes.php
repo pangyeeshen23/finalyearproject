@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Routing\Router;
+use App\Admin\Controllers\UserController;
 
 Admin::routes();
 
@@ -17,5 +18,7 @@ Route::group([
     $router->resource('users', UserController::class);
     $router->resource('drivers', DriverController::class);
     $router->resource('user-roles', UserRolesController::class);
+
+    $router->post('/users/approval', [UserController::class, 'approval']);
 
 });

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\User;
 
 class UserStudentApplications extends Model
 {
@@ -21,4 +22,8 @@ class UserStudentApplications extends Model
     protected $hidden = [];
 
     protected $casts = [];
+
+    public function user(){
+        return $this->belongTo(User::class);
+    }
 }

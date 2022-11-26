@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('user_student_applications', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->string('file_name');
             $table->string('file_link');
             $table->timestamps();

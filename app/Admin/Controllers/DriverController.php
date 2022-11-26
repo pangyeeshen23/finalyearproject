@@ -89,7 +89,7 @@ class DriverController extends AdminController
         $permissionModel = config('admin.database.permissions_model');
         $roleModel = config('admin.database.roles_model');
         $driverRole = $roleModel::where('slug','driver')->first();
-
+        
         $form = new Form(new Drivers());
 
         $form->text('username', __('Username'))->required()
@@ -108,8 +108,8 @@ class DriverController extends AdminController
         $form->switch('is_approved', __('Is approved'));
         $form->multipleSelect('roles', trans('admin.roles'))
         ->options($roleModel::all()->pluck('name', 'id'))
-        ->readonly($driverRole->id)
-        ->required();
+        ->default($driverRole->id)
+        ->readonly()->required();
 
         $form->saving(function(Form $form){
             if($form->password && $form->model()->password != $form->password) $form->password = Hash::make($form->password);

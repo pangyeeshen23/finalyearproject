@@ -4,7 +4,6 @@ namespace Database\Seeders;
 
 use DB;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Hash;
 
 class AdminTablesSeeder extends Seeder
 {
@@ -77,11 +76,43 @@ class AdminTablesSeeder extends Seeder
                 ],
                 [
                     "icon" => "fa-map",
-                    "order" => 8,
+                    "order" => 11,
                     "parent_id" => 0,
                     "permission" => "plans",
                     "title" => "Travel Plans",
                     "uri" => "plans"
+                ],
+                [
+                    "icon" => "fa-tasks",
+                    "order" => 8,
+                    "parent_id" => 0,
+                    "permission" => "*",
+                    "title" => "User",
+                    "uri" => NULL
+                ],
+                [
+                    "icon" => "fa-user",
+                    "order" => 9,
+                    "parent_id" => 9,
+                    "permission" => "*",
+                    "title" => "Users",
+                    "uri" => "users"
+                ],
+                [
+                    "icon" => "fa-bars",
+                    "order" => 10,
+                    "parent_id" => 9,
+                    "permission" => "*",
+                    "title" => "User Roles",
+                    "uri" => "user-roles"
+                ],
+                [
+                    "icon" => "fa-car",
+                    "order" => 12,
+                    "parent_id" => 0,
+                    "permission" => "*",
+                    "title" => "Drivers",
+                    "uri" => "drivers"
                 ]
             ]
         );
@@ -142,25 +173,6 @@ class AdminTablesSeeder extends Seeder
             ]
         );
 
-        DB::table('admin_users')->insert(
-            [
-                [
-                    'username' => 'admin',
-                    'password' => Hash::make('admin'),
-                    'name'     => 'Administrator',
-                ]
-            ]
-        );
-
-        DB::table('admin_role_users')->insert(
-            [
-                [
-                    'role_id' => 1,
-                    'user_id' => 1,
-                ]
-            ]
-        );
-
         // pivot tables
         DB::table('admin_role_menu')->truncate();
         DB::table('admin_role_menu')->insert(
@@ -171,6 +183,22 @@ class AdminTablesSeeder extends Seeder
                 ],
                 [
                     "menu_id" => 8,
+                    "role_id" => 1
+                ],
+                [
+                    "menu_id" => 9,
+                    "role_id" => 1
+                ],
+                [
+                    "menu_id" => 10,
+                    "role_id" => 1
+                ],
+                [
+                    "menu_id" => 11,
+                    "role_id" => 1
+                ],
+                [
+                    "menu_id" => 12,
                     "role_id" => 1
                 ],
                 [
