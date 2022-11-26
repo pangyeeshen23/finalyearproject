@@ -7,6 +7,7 @@ use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
+use Illuminate\Support\Facades\Hash;
 
 class DriverController extends AdminController
 {
@@ -32,7 +33,6 @@ class DriverController extends AdminController
 
         $grid->column('id', __('Id'));
         $grid->column('username', __('Username'));
-        $grid->column('password', __('Password'));
         $grid->column('name', __('Name'));
         $grid->column('avatar', __('Avatar'));
         $grid->column('email_address', __('Email Address'));
@@ -75,10 +75,6 @@ class DriverController extends AdminController
         $show->field('roles', 'Roles')->as(function ($roles) {
             return $roles->pluck('name');
         })->label();
-        $show->field('permissions', 'Permissions')->as(function ($permission) {
-            return $permission->pluck('name');
-        })->label();
-
         return $show;
     }
 
@@ -96,8 +92,12 @@ class DriverController extends AdminController
 
         $form = new Form(new Drivers());
 
-        $form->text('username', __('Username'))->required()->rules('unique:admin_users');
-        $form->password('password', __('Password'))->required();
+        $form->text('username', __('Username'))->required()
+            ->creationRules('unique:admin_users')
+            ->updateRules('unique:admin_users,username,{{id}}');
+        $form->password('password', __('Password'))->required()->default(function($form){
+            return $form->model()->password;
+        });
         $form->text('name', __('Name'))->required();
         $form->image('avatar', __('Avatar'))->required();
         $form->text('email_address', __('Email address'))->required()->rules('email');
@@ -108,12 +108,14 @@ class DriverController extends AdminController
         $form->switch('is_approved', __('Is approved'));
         $form->multipleSelect('roles', trans('admin.roles'))
         ->options($roleModel::all()->pluck('name', 'id'))
-        ->default($driverRole->id)
-        ->disable()->required();
+        ->readonly($driverRole->id)
+        ->required();
 
-        // $form->saving(function(Form $form){
-        //     dd($form);
-        // });
+        $form->saving(function(Form $form){
+            if($form->password && $form->model()->password != $form->password) $form->password = Hash::make($form->password);
+        });
+
+
 
         return $form;
     }
