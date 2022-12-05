@@ -36,7 +36,6 @@ class DriverController extends AdminController
         $grid->column('id', __('Id'));
         $grid->column('username', __('Username'));
         $grid->column('name', __('Name'));
-        $grid->column('avatar', __('Avatar'));
         $grid->column('email_address', __('Email Address'));
         $grid->column('phone_number', __('Phone Number'));
         $grid->column('identity_card_number', __('Identity Card Number'));
@@ -63,9 +62,8 @@ class DriverController extends AdminController
 
         $show->field('id', __('Id'));
         $show->field('username', __('Username'));
-        $show->field('password', __('Password'));
         $show->field('name', __('Name'));
-        $show->field('avatar', __('Avatar'));
+        $show->field('avatar', __('Avatar'))->image();
         $show->field('created_at', __('Created at'));
         $show->field('updated_at', __('Updated at'));
         $show->field('email_address', __('Email address'));
