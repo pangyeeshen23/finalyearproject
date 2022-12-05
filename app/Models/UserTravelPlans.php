@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class UserTravelPlans extends Model
 {
-    use HasFactory;
 
     protected $fillable = [
         'id',

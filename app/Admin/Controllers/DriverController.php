@@ -2,12 +2,14 @@
 
 namespace App\Admin\Controllers;
 
-use App\Models\Drivers;
-use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
+use App\Models\Drivers;
+use Illuminate\Http\Request;
+use App\Admin\Tools\ApprovalButton;
 use Illuminate\Support\Facades\Hash;
+use Encore\Admin\Controllers\AdminController;
 
 class DriverController extends AdminController
 {
@@ -56,7 +58,8 @@ class DriverController extends AdminController
      */
     protected function detail($id)
     {
-        $show = new Show(Drivers::findOrFail($id));
+        $driver = Drivers::findOrFail($id);
+        $show = new Show($driver);
 
         $show->field('id', __('Id'));
         $show->field('username', __('Username'));
@@ -75,6 +78,24 @@ class DriverController extends AdminController
         $show->field('roles', 'Roles')->as(function ($roles) {
             return $roles->pluck('name');
         })->label();
+        
+        if($driver->driverApplication){
+            $driverApplication = $driver->driverApplication;
+            $show->driverApplication('Driver Application', function($driverApplicationInfo) use ($id, $driverApplication){
+                $driverApplication->id();
+                $driverApplication->file_name();
+                $driverApplication->file_image()->image();
+
+                $driverApplication->panel()->tools(function($tool) use ($id, $driverApplication){
+                    $tool->disableEdit();
+                    $tool->disableList();
+                    $tool->disableDelet();
+                    $tool->append(new ApprovalButton($id, $driverApplication->id, "DRIVER"));
+                });
+            });
+        }
+        
+
         return $show;
     }
 
@@ -118,5 +139,29 @@ class DriverController extends AdminController
 
 
         return $form;
+    }
+
+    public function approval(Request $request){
+        // havent test
+        $request->validate([
+            'user_id' => 'required|int',
+            'application_id'=> 'required|int'
+        ]);
+
+        $error = false;
+
+        try{
+
+            $driver = Driver::findorfail($request->id);
+            $driver->is_approved = true;
+            $driver->update();
+
+        }catch(\Throwable $ex){
+            $error = true;
+        }
+
+        if($error) return  admin_toastr("System error, Please try again later", "error");
+        else return admin_toastr("Application Approved");
+
     }
 }

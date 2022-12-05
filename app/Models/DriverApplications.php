@@ -4,16 +4,15 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Driver;
 
-class Vechicles extends Model
+class DriverApplications extends Model
 {
-
     protected $fillable = [
         'id',
-        'plate_number',
-        'model',
-        'color',
-        'creator_id',
+        'driver_id',
+        'file_name',
+        'file_link',
         'created_at',
         'updated_at'
     ];
@@ -21,4 +20,8 @@ class Vechicles extends Model
     protected $hidden = [];
 
     protected $casts = [];
+
+    public function driver(){
+        return $this->belongTo(Driver::class);
+    }
 }

@@ -8,7 +8,6 @@ use Encore\Admin\Auth\Database\Administrator;
 
 class TravelPlans extends Model
 {
-    use HasFactory;
 
     protected $fillable = [
         'id',

@@ -8,7 +8,6 @@ use App\Models\User;
 
 class UserStudentApplications extends Model
 {
-    use HasFactory;
 
     protected $fillable = [
         'id',

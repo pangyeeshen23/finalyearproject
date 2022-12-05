@@ -8,13 +8,16 @@ use Illuminate\Support\Farcades\Request;
 
 class ApprovalButton extends AbstractTool
 {
-    protected $studentApplicationId;
+    protected $ApplicationId;
 
     protected $user_id;
+
+    protected $type;
     
-    public function __construct($user_id, $studentApplicationId){
+    public function __construct($user_id, $ApplicationId, $type){
         $this->user_id = $user_id;
-        $this->studentApplicationId = $studentApplicationId;
+        $this->ApplicationId = $ApplicationId;
+        $this->type = $type;
     }
 
 
@@ -23,11 +26,13 @@ class ApprovalButton extends AbstractTool
        return <<<SCRIPT
         $('.approval-button').on('click', function(){
             let userId = $(this).data('userId');
-            let studentApplicationId = $(this).data('studentApplicationId');
+            let applicationId = $(this).data('applicationId');
+            let url = $(this).data('url');
 
             let data = {
                 'user_id' : userId,
-                'student_application_id' : studentApplicationId,
+                'application_id' : applicationId,
+                'url : url,
                 _token: LA.token,
             }
 
@@ -42,7 +47,8 @@ class ApprovalButton extends AbstractTool
 
     public function render(){
         Admin::script($this->script());
+        $url = ($this->type == "STUDENT")? '/admin/users/approval' : '/admin/drivers/approval';
 
-        return "<a class='btn btn-sm btn-success fa fa-check approval-button' data-user-id='{$this->user_id}' data-student-application-id='{$this->studentApplicationId}'>Approval</a>";
+        return "<a class='btn btn-sm btn-success fa fa-check approval-button' data-user-id='{$this->user_id}' data-student-application-id='{$this->ApplicationId}' data-url='{$url}'>Approval</a>";
     }
 }

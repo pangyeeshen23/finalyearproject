@@ -2,13 +2,13 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use App\Models\DriverApplications;
 use Encore\Admin\Auth\Database\Role;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Drivers extends Model
 {
-    use HasFactory;
 
     protected $table = "admin_users";
 
@@ -39,4 +39,10 @@ class Drivers extends Model
 
         return $this->belongsToMany($relatedModel, $pivotTable, 'user_id', 'role_id');
     }
+
+    public function driverApplication(){
+        return $this->hasOne(DriverApplications::class, 'creator_id');
+    }
+
+    
 }

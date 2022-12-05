@@ -36,6 +36,7 @@ class UserController extends AdminController
         $studentRole = UserRoles::where('slug','STUDENT')->first();
 
         $grid->column('id', __('Id'));
+        $grid->column('username',__('Username'));
         $grid->column('name', __('Name'));
         $grid->column('email', __('Email'));
         $grid->column('email_verified_at', __('Email verified at'));
@@ -66,6 +67,7 @@ class UserController extends AdminController
         $show = new Show(User::findOrFail($id));
 
         $show->field('id', __('Id'));
+        $show->field('username',__('Username'));
         $show->field('name', __('Name'));
         $show->field('email', __('Email'));
         $show->field('email_verified_at', __('Email verified at'));
@@ -84,7 +86,7 @@ class UserController extends AdminController
                     $tools->disableEdit();
                     $tools->disableList();
                     $tools->disableDelete();
-                    $tools->append(new ApprovalButton($id,$studentApplication->id));
+                    $tools->append(new ApprovalButton($id, $studentApplication->id, "STUDENT"));
                 });
             });
         }
@@ -102,6 +104,7 @@ class UserController extends AdminController
         $form = new Form(new User());
 
         $form->text('name', __('Name'));
+        $form->text('username',__('Username'));
         $form->email('email', __('Email'));
         $form->datetime('email_verified_at', __('Email verified at'))->default(date('Y-m-d H:i:s'));
         $form->password('password', __('Password'))->default(function($form){
@@ -141,8 +144,6 @@ class UserController extends AdminController
             $user->role_id = $userRole->id;
             $user->update();
         }catch(\Throwable  $ex){
-
-            dd($ex);
             $error = true;
         }
 
