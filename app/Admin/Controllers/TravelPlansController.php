@@ -85,8 +85,9 @@ class TravelPlansController extends AdminController
         $form->text('meeting_point', __('Meeting point'))->required();
         $form->latlong('depart_lat', 'depart_long', 'Depart')->default(['lat' => 3.1569, 'lng' => 101.7123])->required();
         $form->latlong('destination_lat', 'destination_long', 'Destination')->default(['lat' => 3.1569, 'lng' => 101.7123])->required();
-        $form->decimal('fees', __('Fees'))->required();
-        $form->switch('is_student', __('Is student'));
+        $form->decimal('fees', __('Fees/Person'))->required();
+        $form->number('num_passengers', __('Number of Passenger'))->required();
+        $form->switch('is_student', __('Only Allow Student ?'));
         $form->hidden('creator_id', __('Name'))->default(Admin::user()->id);
 
         return $form;
