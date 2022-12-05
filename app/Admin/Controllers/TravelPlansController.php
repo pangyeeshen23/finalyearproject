@@ -34,6 +34,7 @@ class TravelPlansController extends AdminController
         $grid->column('meeting_point', __('Meeting point'));
         $grid->column('fees', __('Fees'));
         $grid->column('is_student', __('Is student'))->bool();
+        $grid->column('status')->using([ 1 => 'Pending', 2 => 'In Progress', 3 => 'Complete']);
         $grid->column('creator_id', __('Creator id'))->display(function($adminId){
             $adminModel = config('admin.database.users_model');
             return  $adminModel::find($adminId)->name;
@@ -62,6 +63,7 @@ class TravelPlansController extends AdminController
         $show->field('destination', __('Destination'))->latlong('destination_lat', 'destination_long', $height = 400, $zoom = 10);
         $show->field('fees', __('Fees'));
         $show->field('is_student', __('For student only ?'));
+        $show->field('status')->using([ 1 => 'Pending', 2 => 'In Progress', 3 => 'Complete']);
         $show->admins('Creator Information', function($creator){
             $creator->id();
             $creator->name();
@@ -88,6 +90,7 @@ class TravelPlansController extends AdminController
         $form->decimal('fees', __('Fees/Person'))->required();
         $form->number('num_passengers', __('Number of Passenger'))->required();
         $form->switch('is_student', __('Only Allow Student ?'));
+        $form->select('status', __('Status'))->options([1 => 'Pending', 2 => 'In Progress', 3 => 'Complete'])->default(1);
         $form->hidden('creator_id', __('Name'))->default(Admin::user()->id);
 
         return $form;

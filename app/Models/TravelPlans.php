@@ -2,9 +2,11 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\User;
+use App\Models\UserTravelPlans;
 use Illuminate\Database\Eloquent\Model;
 use Encore\Admin\Auth\Database\Administrator;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class TravelPlans extends Model
 {
@@ -28,8 +30,12 @@ class TravelPlans extends Model
 
     protected $casts = [];
 
-    public function admins(){
-        return $this->belongsTo(Admin::class. 'creator_id');
+    public function creator(){
+        return $this->belongsTo(Admin::class,'creator_id');
+    }
+
+    public function users(){
+        return $this->belongsToMany(User::class, UserTravelPlans::class,'travel_plan_id', 'user_id');
     }
 
 }
