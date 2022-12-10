@@ -20,4 +20,9 @@ class UserTravelPlans extends Model
     protected $hidden = [];
 
     protected $casts = [];
+
+    
+    public function travelPlan(){
+        return $this->belongsTo(TravelPlan::class,'travel_id');
+    }
 }

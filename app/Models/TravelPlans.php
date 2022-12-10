@@ -38,4 +38,12 @@ class TravelPlans extends Model
         return $this->belongsToMany(User::class, UserTravelPlans::class,'travel_plan_id', 'user_id');
     }
 
+    public function userTravelPlans(){
+        return $this->hasMany(UserTravelPlans::class);
+    }
+    public function rate(){
+        return $this->userTravelPlans()->selectRaw('avg(rate) as driver_rate');
+    }
+
+
 }
