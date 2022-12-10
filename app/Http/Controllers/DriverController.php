@@ -30,6 +30,18 @@ class DriverController extends Controller
         return response()->BaseResponse('200', '', $item);
     }
 
+    public function getAllAsOptions(Request $request)
+    {
+        $request->validate([
+            'page' => 'required',
+        ]);
+
+        $skip = $request->num_item  * $request->page;
+        $driverModel = Drivers::skip($skip)->take(10);
+        $item = $driverModel->get();
+        return response()->BaseResponse('200', '', $item);
+    }
+
     public function getDetails(Request $request){
         $request->validate([
             'id' => 'required'
