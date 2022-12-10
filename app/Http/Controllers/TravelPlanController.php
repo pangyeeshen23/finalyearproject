@@ -62,6 +62,19 @@ class TravelPlanController extends Controller
         }
         return response()->BaseResponse('200','User has joined the travel plan',);
     }
+    
+    public function rate(Request $request){
+        $request->validate([
+            'user_travel_plan_id' => 'required',
+            'rate' => 'required',
+        ]);
 
+        $userTravelPlans  = UserTravelPlans::find($request->user_travel_plan_id);
+        $userTravelPlans->rate = $request->rate;
+        $userTravelPlans->save();
+
+        return response()->BaseResponse('200', 'Rate Success', '');
+    }
+    
 
 }

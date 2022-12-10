@@ -1,8 +1,9 @@
 <?php
 
+use App\Http\Controllers\ProfileController;
+use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
-use App\Admin\Controllers\AuthController;
-use Illuminate\Routing\Router;
+use Inertia\Inertia;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,12 +17,22 @@ use Illuminate\Routing\Router;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return Inertia::render('Welcome', [
+        'canLogin' => Route::has('login'),
+        'canRegister' => Route::has('register'),
+        'laravelVersion' => Application::VERSION,
+        'phpVersion' => PHP_VERSION,
+    ]);
 });
 
-Route::group([ 'prefix' => 'driver','as' => 'driver.'], function(Router $router){
-    $router->get('/login', [AuthController::class, 'getDriverLogin']);
-    $router->get('/register', [AuthController::class, 'getDriverRegister']);
-    $router->post('/registerDriver', [AuthController::class], 'postDriverRegister');
+Route::get('/dashboard', function () {
+    return Inertia::render('Dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+require __DIR__.'/auth.php';
