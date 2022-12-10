@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>{{config('driver.title')}} | {{ trans('admin.login') }}</title>
+  <title>Driver | Register</title>
   <!-- Tell the browser to be responsive to screen width -->
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
 
@@ -32,63 +32,140 @@
 <body class="hold-transition login-page"
   @if(config('driver.login_background_image'))style="background: url({{config('driver.login_background_image')}}) no-repeat;background-size: cover;"
   @endif>
-  <div class="login-box">
+  <div class="login-box" style="width: 700px">
     <div class="login-logo">
       <b>Register as Driver in the system</b>
     </div>
     <!-- /.login-logo -->
     <div class="login-box-body">
-      <p class="login-box-msg">{{ trans('admin.login') }}</p>
+      <p class="login-box-msg">Register</p>
 
-      <form action="{{ admin_url('auth/login') }}" method="post">
-        <div class="form-group has-feedback {!! !$errors->has('username') ?: 'has-error' !!}">
-
-          @if($errors->has('username'))
-          @foreach($errors->get('username') as $message)
-          <label class="control-label" for="inputError"><i class="fa fa-times-circle-o"></i>{{$message}}</label><br>
-          @endforeach
-          @endif
-
-          <input type="text" class="form-control" placeholder="{{ trans('admin.username') }}" name="username"
-            value="{{ old('username') }}">
-          <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
-        </div>
-        <div class="form-group has-feedback {!! !$errors->has('password') ?: 'has-error' !!}">
-
-          @if($errors->has('password'))
-          @foreach($errors->get('password') as $message)
-          <label class="control-label" for="inputError"><i class="fa fa-times-circle-o"></i>{{$message}}</label><br>
-          @endforeach
-          @endif
-
-          <input type="password" class="form-control" placeholder="{{ trans('admin.password') }}" name="password">
-          <span class="glyphicon glyphicon-lock form-control-feedback"></span>
-        </div>
+      <form action="{{ admin_url('auth/registerDriver') }}" method="post">
         <div class="row">
-          <div class="col-xs-8">
-            @if(config('driver.auth.remember'))
-            <div class="checkbox icheck">
-              <label>
-                <input type="checkbox" name="remember" value="1" {{ (!old('username') || old('remember')) ? 'checked'
-                  : '' }}>
-                {{ trans('admin.remember_me') }}
-              </label>
+          <div class="col-xs-12">
+            <div class="form-group has-feedback {!! !$errors->has('username') ?: 'has-error' !!}">
+
+              @if($errors->has('username'))
+              @foreach($errors->get('username') as $message)
+              <label class="control-label" for="inputError"><i class="fa fa-times-circle-o"></i>{{$message}}</label><br>
+              @endforeach
+              @endif
+
+              <input type="text" class="form-control" placeholder="{{ trans('admin.username') }}" name="username"
+                value="{{ old('username') }}">
             </div>
-            @endif
           </div>
-          <!-- /.col -->
+          <div class="col-xs-12">
+            <div class="form-group has-feedback {!! !$errors->has('name') ?: 'has-error' !!}">
+
+              @if($errors->has('name'))
+              @foreach($errors->get('name') as $message)
+              <label class="control-label" for="inputError"><i class="fa fa-times-circle-o"></i>{{$message}}</label><br>
+              @endforeach
+              @endif
+
+              <input type="text" class="form-control" placeholder="Name" name="name" value="{{ old('username') }}">
+            </div>
+          </div>
+          <div class="col-xs-6">
+            <div class="form-group has-feedback {!! !$errors->has('ic_number') ?: 'has-error' !!}">
+
+              @if($errors->has('ic_number'))
+              @foreach($errors->get('ic_number') as $message)
+              <label class="control-label" for="inputError"><i class="fa fa-times-circle-o"></i>{{$message}}</label><br>
+              @endforeach
+              @endif
+
+              <input type="text" class="form-control" placeholder="Identification Number" name="ic_number"
+                value="{{ old('ic_number') }}">
+            </div>
+          </div>
+          <div class="col-xs-6">
+            <div class="form-group has-feedback {!! !$errors->has('birthday') ?: 'has-error' !!}">
+
+              @if($errors->has('birthday'))
+              @foreach($errors->get('birthday') as $message)
+              <label class="control-label" for="inputError"><i class="fa fa-times-circle-o"></i>{{$message}}</label><br>
+              @endforeach
+              @endif
+
+              <input type="date" class="form-control" placeholder="Birthday" name="birthday"
+                value="{{ old('birthday') }}">
+            </div>
+          </div>
+          <div class="col-xs-6">
+            <div class="form-group has-feedback {!! !$errors->has('password') ?: 'has-error' !!}">
+
+              @if($errors->has('password'))
+              @foreach($errors->get('password') as $message)
+              <label class="control-label" for="inputError"><i class="fa fa-times-circle-o"></i>{{$message}}</label><br>
+              @endforeach
+              @endif
+
+              <input type="password" class="form-control" placeholder="{{ trans('admin.password') }}" name="password">
+            </div>
+          </div>
+
+          <div class="col-xs-6">
+            <div class="form-group has-feedback {!! !$errors->has('password_confirmation') ?: 'has-error' !!}">
+
+              @if($errors->has('password_confirmation'))
+              @foreach($errors->get('password_confirmation') as $message)
+              <label class="control-label" for="inputError"><i class="fa fa-times-circle-o"></i>{{$message}}</label><br>
+              @endforeach
+              @endif
+
+              <input type="password" class="form-control" placeholder="Confirm Password" name="password_confirmation">
+            </div>
+          </div>
+
+          <div class="col-xs-6">
+            <div class="form-group has-feedback {!! !$errors->has('phoneNumber') ?: 'has_error' !!}">
+
+              @if($errors->has('phoneNumber'))
+              @foreach($errors->get('phoneNumber') as $message)
+              <label class="control-label" for="inputError"><i class="fa fa-times-circle-o"></i>{{$message}}</label><br>
+              @endforeach
+              @endif
+
+              <input type="phoneNumber" class="form-control" placeholder="Phone Number" name="phoneNumber">
+            </div>
+          </div>
+          <div class="col-xs-6">
+            <div class="form-group has-feedback {!! !$errors->has('email_address') ?: 'has-error' !!}">
+
+              @if($errors->has('email_address'))
+              @foreach($errors->get('email_address') as $message)
+              <label class="control-label" for="inputError"><i class="fa fa-times-circle-o"></i>{{$message}}</label><br>
+              @endforeach
+              @endif
+
+              <input type="email" class="form-control" placeholder="Email Address" name="email_address"
+                value="{{ old('email_address') }}">
+            </div>
+          </div>
+
+          <div class="col-xs-12">
+            <div class="form-group has-feedback {!! !$errors->has('driver_liscense') ?: 'has-error' !!}">
+              @if($errors->has('driver_liscense'))
+              @foreach($errors->get('driver_liscense') as $message)
+              <label class="control-label" for="inputError"><i class="fa fa-times-circle-o"></i>{{$message}}</label><br>
+              @endforeach
+              @endif
+              <label>Please update your driver liscense</label>
+              <input type="file" class="form-control" name="driver_liscense" accept="image/png, image/gif, image/jpeg"
+                value="{{ old('driver_liscense') }}">
+            </div>
+          </div>
+
           <div class="col-xs-12">
             <input type="hidden" name="_token" value="{{ csrf_token() }}">
             <div class="row">
-              <div class="col-xs-8">
-                <a href="/driver/register">Register as driver ?</a>
-              </div>
               <div class="col-xs-4">
-                <button type="submit" class="btn btn-primary btn-block btn-flat">{{ trans('admin.login') }}</button>
+                <button type="submit" class="btn btn-primary btn-block btn-flat">Register</button>
               </div>
             </div>
           </div>
-          <!-- /.col -->
         </div>
       </form>
 

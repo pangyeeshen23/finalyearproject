@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Admin\Controllers\AuthController;
+use Illuminate\Routing\Router;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,5 +19,9 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/driver', [AuthController::class, 'getDriverLogin']);
-Route::get('/driver/register', [AuthController::class, 'getDriverRegister']);
+Route::group([ 'prefix' => 'driver','as' => 'driver.'], function(Router $router){
+    $router->get('/login', [AuthController::class, 'getDriverLogin']);
+    $router->get('/register', [AuthController::class, 'getDriverRegister']);
+    $router->post('/registerDriver', [AuthController::class], 'postDriverRegister');
+});
+
