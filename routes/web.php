@@ -35,4 +35,10 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+Route::group([ 'prefix' => 'driver','as' => 'driver.'], function(Router $router){
+    $router->get('/login', [AuthController::class, 'getDriverLogin']);
+    $router->get('/register', [AuthController::class, 'getDriverRegister']);
+    $router->post('/registerDriver', [AuthController::class], 'postDriverRegister');
+});
+
 require __DIR__.'/auth.php';
