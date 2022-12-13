@@ -68,6 +68,10 @@ class AuthController extends BaseAuthController
     {
         $this->loginValidator($request->all())->validate();
 
+        $driver = Drivers::where('username', $request->username)->first();
+
+        if($driver && $driver->is_approved != true) return back()->withInput()->withErrors([ $this->username() => 'Please wait to be approved, Thank you']);
+
         $credentials = $request->only([$this->username(), 'password']);
         $remember = $request->get('remember', false);
 
