@@ -32,15 +32,26 @@
 <body class="hold-transition login-page"
   @if(config('driver.login_background_image'))style="background: url({{config('driver.login_background_image')}}) no-repeat;background-size: cover;"
   @endif>
+
+
+
+
   <div class="login-box" style="width: 700px">
     <div class="login-logo">
       <b>Register as Driver in the system</b>
     </div>
+    @if(Session::has('state'))
+    <div class="{!! Session::has('state') == 'success' ?'alert alert-success' : 'alert alert-danger' !!}"
+      style="width: 700px">
+      {!! Session::has('state') == 'success' ?' Register Successful, Please for the approval by the admin. An email will
+      send to notify your application.' : ' System errror, Please try again later' !!}
+    </div>
+    @endif
     <!-- /.login-logo -->
     <div class="login-box-body">
       <p class="login-box-msg">Register</p>
 
-      <form action="{{ admin_url('auth/registerDriver') }}" method="post">
+      <form enctype="multipart/form-data" action="{{ url('/driver/registerDriver') }}" method="post">
         <div class="row">
           <div class="col-xs-12">
             <div class="form-group has-feedback {!! !$errors->has('username') ?: 'has-error' !!}">
@@ -120,15 +131,15 @@
           </div>
 
           <div class="col-xs-6">
-            <div class="form-group has-feedback {!! !$errors->has('phoneNumber') ?: 'has_error' !!}">
+            <div class="form-group has-feedback {!! !$errors->has('phone_number') ?: 'has_error' !!}">
 
-              @if($errors->has('phoneNumber'))
-              @foreach($errors->get('phoneNumber') as $message)
+              @if($errors->has('phone_number'))
+              @foreach($errors->get('phone_number') as $message)
               <label class="control-label" for="inputError"><i class="fa fa-times-circle-o"></i>{{$message}}</label><br>
               @endforeach
               @endif
 
-              <input type="phoneNumber" class="form-control" placeholder="Phone Number" name="phoneNumber">
+              <input type="phone_number" class="form-control" placeholder="Phone Number" name="phone_number">
             </div>
           </div>
           <div class="col-xs-6">

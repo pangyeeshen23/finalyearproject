@@ -6,7 +6,7 @@ use DateTime;
 
 class Helpers{
 
-    public function calculateAgeFromBirthday($birtday){
+    public static function calculateAgeFromBirthday($birtday){
         $bday = new DateTime($birtday);
         $today = new DateTime(date('m.d.y'));
 

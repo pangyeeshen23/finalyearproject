@@ -1,7 +1,11 @@
 <?php
 
 use Illuminate\Routing\Router;
+use App\Admin\Controllers\AuthController;
 use App\Admin\Controllers\UserController;
+use App\Admin\Controllers\DriverController;
+use App\Admin\Controllers\UserRolesController;
+use App\Admin\Controllers\TravelPlansController;
 
 Admin::routes();
 
@@ -20,5 +24,14 @@ Route::group([
     $router->resource('user-roles', UserRolesController::class);
 
     $router->post('/users/approval', [UserController::class, 'approval']);
+    $router->post('/drivers/approval', [DriverController::class, 'approval']);
+});
 
+
+
+Route::group([ 'prefix' => 'driver','as' => 'driver.','middleware' => 'web'], function(Router $router){
+    $router->get('/login', [AuthController::class, 'getDriverLogin']);
+    $router->post('/loginDriver', [AuthController::class, 'postDriverLogin']);
+    $router->get('/register', [AuthController::class, 'getDriverRegister']);
+    $router->post('/registerDriver', [AuthController::class, 'postDriverRegister']);
 });

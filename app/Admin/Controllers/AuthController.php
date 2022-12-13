@@ -3,14 +3,23 @@
 namespace App\Admin\Controllers;
 
 use DateTime;
+use Throwable;
+use Encore\Admin\Form;
 use App\Helper\Helpers;
 use App\Models\Drivers;
+use Illuminate\Http\Request;
+use Encore\Admin\Facades\Admin;
+use Encore\Admin\Layout\Content;
 use App\Models\DriverApplications;
+use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Lang;
 use Illuminate\Validation\Rules\File;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Validation\Rules\Password;
+use Validator;
+use Symfony\Component\HttpFoundation\Response;
 use Encore\Admin\Controllers\AuthController as BaseAuthController;
-use Exception;
 
 class AuthController extends BaseAuthController
 {
@@ -81,12 +90,12 @@ class AuthController extends BaseAuthController
      */
 
     public function postDriverRegister(Request $request){
-        $this->registerValidator($request->all())->validate();
+        $validator = $this->registerValidator($request->all())->validate();
         
         try{
             $age = Helpers::calculateAgeFromBirthday($request->birthday);
 
-            $driver = new Drivers();
+            $driver = new Drivers;
             $driver->username = $request->username;
             $driver->name = $request->name;
             $driver->password = Hash::make($request->password);
@@ -102,7 +111,7 @@ class AuthController extends BaseAuthController
             $path = "Driver-Application-$driverId";
             $storedPath = $request->driver_liscense->storeAs('driverApplication', "$path.$extension",'admin');
     
-            $driverApplication = new DriverApplications();
+            $driverApplication = new DriverApplications;
             $driverApplication->creator_id = $driverId;
             $driverApplication->file_name = $path;
             $driverApplication->file_link = $storedPath;
@@ -113,6 +122,7 @@ class AuthController extends BaseAuthController
     
             $driver->roles()->attach($role->id);
         }catch(Throwable $exc){
+            dd($exc);
             return back()->withInput()->withErrors([ 'state' => 'error' ]);
         }
 
@@ -129,14 +139,14 @@ class AuthController extends BaseAuthController
     protected function registerValidator(array $data)
     {
         return Validator::make($data, [
-            'username' => 'required|unique:username',
+            'username' => 'required|unique:admin_users',
             'name' => 'required',
             'password' => ['required','confirmed', Password::min(8)->mixedCase()->symbols()],
-            'email_address' => 'required|email|unique:email_address',
+            'email_address' => 'required|email|unique:admin_users',
             'phone_number' => 'required',
             'birthday' => 'required|date',
             'ic_number' => 'required',
-            'driver_liscense' => ['required', File::image()->min(1024)->max(12 * 1024)]
+            'driver_liscense' => ['required', File::image()]
         ]);
     }
 

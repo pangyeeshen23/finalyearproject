@@ -40,7 +40,7 @@
     <div class="login-box-body">
       <p class="login-box-msg">{{ trans('admin.login') }}</p>
 
-      <form action="{{ admin_url('auth/login') }}" method="post">
+      <form action="{{ url('/driver/loginDriver') }}" method="post">
         <div class="form-group has-feedback {!! !$errors->has('username') ?: 'has-error' !!}">
 
           @if($errors->has('username'))
