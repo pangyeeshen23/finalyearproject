@@ -65,6 +65,7 @@ class UserController extends AdminController
     {
         $user= User::where('id',$id)->first();
         $show = new Show(User::findOrFail($id));
+        $studentRole = UserRoles::where('slug','STUDENT')->first();
 
         $show->field('id', __('Id'));
         $show->field('username',__('Username'));
@@ -75,7 +76,7 @@ class UserController extends AdminController
         $show->field('updated_at', __('Updated at'));
         $show->field('birthday', __('Birthday'));
 
-        if($user->studentApplication){
+        if($user->role_id != $studentRole->id && $user->studentApplication){
             $studentApplication = $user->studentApplication;
             $show->studentApplication('Student Application', function($studentApplicationInfo) use ($id, $studentApplication){
                 $studentApplicationInfo->id();
@@ -125,7 +126,7 @@ class UserController extends AdminController
     public function approval(Request $request){
         $request->validate([
             'user_id' => 'required|int',
-            'student_application_id'=> 'required|int'
+            'application_id'=> 'required|int'
         ]);
 
         $error = false;

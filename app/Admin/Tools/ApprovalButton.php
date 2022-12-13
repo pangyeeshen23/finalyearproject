@@ -32,11 +32,10 @@ class ApprovalButton extends AbstractTool
             let data = {
                 'user_id' : userId,
                 'application_id' : applicationId,
-                'url : url,
                 _token: LA.token,
             }
 
-            $.post("/admin/users/approval", data, 'json').done(() => {
+            $.post(url, data, 'json').done(() => {
                 //location.reload();
             })
         });
@@ -49,6 +48,6 @@ class ApprovalButton extends AbstractTool
         Admin::script($this->script());
         $url = ($this->type == "STUDENT")? '/admin/users/approval' : '/admin/drivers/approval';
 
-        return "<a class='btn btn-sm btn-success fa fa-check approval-button' data-user-id='{$this->user_id}' data-student-application-id='{$this->ApplicationId}' data-url='{$url}'>Approval</a>";
+        return "<a class='btn btn-sm btn-success fa fa-check approval-button' data-user-id='{$this->user_id}' data-application-id='{$this->ApplicationId}' data-url='{$url}'>Approval</a>";
     }
 }

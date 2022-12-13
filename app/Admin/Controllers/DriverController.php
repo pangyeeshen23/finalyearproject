@@ -77,17 +77,17 @@ class DriverController extends AdminController
             return $roles->pluck('name');
         })->label();
         
-        if($driver->driverApplication){
+        if($driver->is_approved != true && $driver->driverApplication){
             $driverApplication = $driver->driverApplication;
             $show->driverApplication('Driver Application', function($driverApplicationInfo) use ($id, $driverApplication){
-                $driverApplication->id();
-                $driverApplication->file_name();
-                $driverApplication->file_image()->image();
+                $driverApplicationInfo->id();
+                $driverApplicationInfo->file_name();
+                $driverApplicationInfo->file_image()->image();
 
-                $driverApplication->panel()->tools(function($tool) use ($id, $driverApplication){
+                $driverApplicationInfo->panel()->tools(function($tool) use ($id, $driverApplication){
                     $tool->disableEdit();
                     $tool->disableList();
-                    $tool->disableDelet();
+                    $tool->disableDelete();
                     $tool->append(new ApprovalButton($id, $driverApplication->id, "DRIVER"));
                 });
             });
@@ -149,11 +149,9 @@ class DriverController extends AdminController
         $error = false;
 
         try{
-
-            $driver = Driver::findorfail($request->id);
+            $driver = Drivers::findorfail($request->user_id);
             $driver->is_approved = true;
             $driver->update();
-
         }catch(\Throwable $ex){
             $error = true;
         }
