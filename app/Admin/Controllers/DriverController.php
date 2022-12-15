@@ -82,7 +82,7 @@ class DriverController extends AdminController
             $show->driverApplication('Driver Application', function($driverApplicationInfo) use ($id, $driverApplication){
                 $driverApplicationInfo->id();
                 $driverApplicationInfo->file_name();
-                $driverApplicationInfo->file_image()->image();
+                $driverApplicationInfo->file_link()->image();
 
                 $driverApplicationInfo->panel()->tools(function($tool) use ($id, $driverApplication){
                     $tool->disableEdit();
