@@ -33,9 +33,9 @@ class TravelPlansController extends AdminController
         $grid->column('description', __('Description'));
         $grid->column('meeting_point', __('Meeting point'));
         $grid->column('fees', __('Fees'));
-        $grid->column('is_student', __('Is student'))->bool();
+        $grid->column('is_student', __('Is student Only'))->bool();
         $grid->column('status')->using([ 1 => 'Pending', 2 => 'In Progress', 3 => 'Complete']);
-        $grid->column('creator_id', __('Creator id'))->display(function($adminId){
+        $grid->column('creator_id', __('Creator'))->display(function($adminId){
             $adminModel = config('admin.database.users_model');
             return  $adminModel::find($adminId)->name;
         });
@@ -59,8 +59,8 @@ class TravelPlansController extends AdminController
         $show->field('name', __('Name'));
         $show->field('description', __('Description'));
         $show->field('meeting_point', __('Meeting point'));
-        $show->field('depart', __('Depart'))->latlong('depart_lat', 'depart_long', $height = 400, $zoom = 10);
-        $show->field('destination', __('Destination'))->latlong('destination_lat', 'destination_long', $height = 400, $zoom = 10);
+        $show->field(__('Depart'))->latlong('depart_lat', 'depart_long','depart_lat', 'depart_long', $height = 400, $zoom = 15);
+        $show->field(__('Destination'))->latlong('destination_lat', 'destination_long','destination_lat', 'destination_long', $height = 400, $zoom = 15);
         $show->field('fees', __('Fees'));
         $show->field('is_student', __('For student only ?'));
         $show->field('status')->using([ 1 => 'Pending', 2 => 'In Progress', 3 => 'Complete']);
