@@ -24,3 +24,4 @@ Form::forget(['map', 'editor']);
 
 Admin::favicon('storage/favicon.ico');
 
+

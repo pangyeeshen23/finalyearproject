@@ -12,6 +12,7 @@
         "encore/laravel-admin": "^1.8",
         "guzzlehttp/guzzle": "^7.2",
         "inertiajs/inertia-laravel": "^0.6.3",
+        "laravel-admin-ext/chartjs": "^1.0",
         "laravel-admin-ext/latlong": "1.x",
         "laravel/framework": "^9.19",
         "laravel/sanctum": "^2.8",

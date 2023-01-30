@@ -1,0 +1,204 @@
+<?php
+
+namespace App\Admin\Controllers;
+
+use Carbon\Carbon;
+use App\Models\User;
+use App\Models\Drivers;
+use Encore\Admin\Admin;
+use App\Models\TravelPlans;
+use Illuminate\Support\Arr;
+use App\Models\UserTravelPlans;
+use Doctrine\DBAL\Logging\Driver;
+use Illuminate\Support\Facades\DB;
+use Encore\Admin\Auth\Database\Administrator;
+
+class Dashboard
+{
+    /**
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public static function title()
+    {
+        return view('admin::dashboard.title');
+    }
+
+    /**
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public static function totalCount()
+    {
+        $title = 'Total User Counts';
+
+        $totalCountUser = User::whereHas('role',function($query){
+            $query->where('slug','DEFAULT');
+        })->get()->count();
+
+        $totalCountStudent = User::whereHas('role',function($query){
+            $query->where('slug','STUDENT');
+        })->get()->count();
+
+
+        $totalCountAdmin = Administrator::whereHas('roles',function($query){
+            $query->where('slug','administrator');
+        })->get()->count();
+
+        $totalCountDriver = Drivers::whereHas('roles',function($query){
+            $query->where('slug','driver');
+        })->get()->count();
+
+        $totalCounts = [
+            ['name' => 'User',       'value' => $totalCountUser],
+            ['name' => 'Student',   'value' =>  $totalCountStudent],
+            ['name' => 'Driver',               'value' => $totalCountDriver],
+            ['name' => 'Admin',             'value' => $totalCountAdmin],
+        ];
+
+        return view('dashboard.table', compact('totalCounts','title'));
+    }
+
+    public static function totalCountTravelPlans()
+    {
+        $title = 'Total Travel Plan Counts';
+
+        $totalCountPending = TravelPlans::where('status', 1)->get()->count();
+
+        $totalCountInProgress = TravelPlans::where('status', 2)->get()->count();
+
+        $totalCountComplete = TravelPlans::where('status', 3)->get()->count();
+
+
+        $totalCounts = [
+            ['name' => 'Pending',       'value' => $totalCountPending],
+            ['name' => 'In Progress',   'value' => $totalCountInProgress],
+            ['name' => 'Complete',               'value' => $totalCountComplete],
+        ];
+
+        return view('dashboard.table', compact('totalCounts','title'));
+    }
+
+    public static function travelPlansType()
+    {
+        $title = 'Travel Plan Type';
+        $defaultType = TravelPlans::where('is_student', 0)->get()->count();
+        $studentType = TravelPlans::where('is_student', 1)->get()->count();
+
+
+        $totalCounts = [
+            ['name' => 'Default',       'value' => $defaultType],
+            ['name' => 'For Student',   'value' => $studentType],
+        ];
+
+
+
+        return view('dashboard.table', compact('totalCounts','title'));
+    }
+
+    public static function ratingCount()
+    {
+        $title = 'Rating Count';
+        $chartId = 'ratingCount';
+        $rating = UserTravelPlans::with(["travelPlan"=> function($query){
+            $query->groupBy('creator_id');
+        }])->with("travelPlan.creator")->select(['travelPlan.creator.name AS name', DB::RAW('sum(rate) AS rate')])->get();
+
+        dd($rating);
+
+
+        $totalCounts = [
+            ['name' => 'Default',       'value' => $defaultType],
+            ['name' => 'For Student',   'value' => $studentType],
+        ];
+
+        $data = (object) [
+            "labels" => ['Default','Student'],
+            "datasets" => [
+                (object) [
+                    "label"=> 'Number of Count',
+                    "data"=> [$defaultType, $studentType],
+                    "backgroundColor"=> [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                    ],
+                    "borderColor"=>  [
+                        'rgba(255,99,132,1)',
+                        'rgba(54, 162, 235, 1)',
+                    ],
+                    "borderWidth"=> 1,
+                ]
+            ],
+            "options"=> (object) [
+                "scales"=> (object) [
+                    "yAxes"=> [
+                        (object) [
+                        "ticks"=>  (object) [
+                            'beginAtZero'=> true,
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        ];
+
+
+
+        return view('dashboard.pie', compact('totalCounts','title','data','chartId'));
+    }
+    
+    public static function monthlyTravelPlansCount()
+    {
+        $title = 'Monthly Travel Plans Count';
+        $chartId = 'monthlyTravelPlan';
+
+        $stats = [];
+        for($i = 11; $i >= 0; $i--){
+            $date = Carbon::now()->subMonths($i);
+            $month = $date->month;
+            $year = $date->year;
+            $count = TravelPlans::whereYear('created_at', '=', $year)
+            ->whereMonth('created_at', '=', $month)
+            ->get()->count();
+
+            array_push($stats, (object)['name' =>  $date->format('M'), 'value' => $count]);
+        }
+
+
+        $data = (object) [
+            "labels" => array_map(function($item){
+                return $item->name;
+            }, $stats),
+            "datasets" => [
+                (object) [
+                    "label"=> 'Number of Count',
+                    "data"=>  array_map(function($item){
+                        return $item->value;
+                    }, $stats),
+                    "backgroundColor"=> [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                    ],
+                    "borderColor"=>  [
+                        'rgba(255,99,132,1)',
+                        'rgba(54, 162, 235, 1)',
+                    ],
+                    "borderWidth"=> 1,
+                ]
+            ],
+            "options"=> (object) [
+                "scales"=> (object) [
+                    "yAxes"=> [
+                        (object) [
+                        "ticks"=>  (object) [
+                            'beginAtZero'=> true,
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        ];
+
+        return view('dashboard.line', compact('title','data','chartId'));
+    }
+}
+
+    

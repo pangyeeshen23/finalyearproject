@@ -131,7 +131,7 @@
           </div>
 
           <div class="col-xs-6">
-            <div class="form-group has-feedback {!! !$errors->has('phone_number') ?: 'has_error' !!}">
+            <div class="form-group has-feedback {!! !$errors->has('phone_number') ?: 'has-error' !!}">
 
               @if($errors->has('phone_number'))
               @foreach($errors->get('phone_number') as $message)
