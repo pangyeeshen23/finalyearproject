@@ -2,12 +2,13 @@
 
 namespace App\Admin\Controllers;
 
-use App\Http\Controllers\Controller;
+use Encore\Admin\Layout\Row;
 // use Encore\Admin\Controllers\Dashboard;
-use App\Admin\Controllers\Dashboard;
+use Encore\Admin\Facades\Admin;
 use Encore\Admin\Layout\Column;
 use Encore\Admin\Layout\Content;
-use Encore\Admin\Layout\Row;
+use App\Admin\Controllers\Dashboard;
+use App\Http\Controllers\Controller;
 
 class HomeController extends Controller
 {
@@ -19,10 +20,12 @@ class HomeController extends Controller
             ->title('Dashboard')
             ->description('')
             ->row(function (Row $row) {
-                $row->column(4, function (Column $column) {
-                    $column->append(Dashboard::totalCount());
-                });
 
+                if(Admin::user()->isRole('administrator')){
+                    $row->column(4, function (Column $column) {
+                        $column->append(Dashboard::totalCount());
+                    });
+                }
 
                 $row->column(4, function (Column $column) {
                     $column->append(Dashboard::totalCountTravelPlans());
@@ -31,13 +34,21 @@ class HomeController extends Controller
                 $row->column(4, function (Column $column) {
                     $column->append(Dashboard::travelPlansType());
                 });
+
+                if(Admin::user()->isRole('driver')){
+                    $row->column(4, function (Column $column) {
+                        $column->append(Dashboard::driverRating());
+                    });
+                }
                 
             })
             ->row(function (Row $row) {
                 
-                $row->column(4, function (Column $column) {
-                    $column->append(Dashboard::ratingCount());
-                });
+                if(Admin::user()->isRole('Administrator')){
+                    $row->column(4, function (Column $column) {
+                        $column->append(Dashboard::ratingCount());
+                    });
+                }
 
                 $row->column(8, function (Column $column) {
                     $column->append(Dashboard::monthlyTravelPlansCount());

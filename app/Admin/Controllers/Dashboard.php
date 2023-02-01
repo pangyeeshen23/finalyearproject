@@ -5,10 +5,10 @@ namespace App\Admin\Controllers;
 use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Drivers;
-use Encore\Admin\Admin;
 use App\Models\TravelPlans;
 use Illuminate\Support\Arr;
 use App\Models\UserTravelPlans;
+use Encore\Admin\Facades\Admin;
 use Doctrine\DBAL\Logging\Driver;
 use Illuminate\Support\Facades\DB;
 use Encore\Admin\Auth\Database\Administrator;
@@ -61,12 +61,23 @@ class Dashboard
     {
         $title = 'Total Travel Plan Counts';
 
-        $totalCountPending = TravelPlans::where('status', 1)->get()->count();
+        $totalCountPendingQuery = TravelPlans::where('status', 1);
+        if(Admin::user()->isRole('driver')) $totalCountPendingQuery = $totalCountPendingQuery->where('creator_id', Admin::user()->id);
+        $totalCountPending = $totalCountPendingQuery
+        ->get()
+        ->count();
 
-        $totalCountInProgress = TravelPlans::where('status', 2)->get()->count();
+        $totalCountInProgressQuery = TravelPlans::where('status', 2);
+        if(Admin::user()->isRole('driver')) $totalCountInProgressQuery = $totalCountInProgressQuery->where('creator_id', Admin::user()->id);
+        $totalCountInProgress = $totalCountInProgressQuery
+        ->get()
+        ->count();
 
-        $totalCountComplete = TravelPlans::where('status', 3)->get()->count();
-
+        $totalCountCompleteQuery = TravelPlans::where('status', 3);
+        if(Admin::user()->isRole('driver')) $totalCountCompleteQuery = $totalCountCompleteQuery->where('creator_id', Admin::user()->id);
+        $totalCountComplete = $totalCountCompleteQuery
+        ->get()
+        ->count();
 
         $totalCounts = [
             ['name' => 'Pending',       'value' => $totalCountPending],
@@ -80,8 +91,17 @@ class Dashboard
     public static function travelPlansType()
     {
         $title = 'Travel Plan Type';
-        $defaultType = TravelPlans::where('is_student', 0)->get()->count();
-        $studentType = TravelPlans::where('is_student', 1)->get()->count();
+        $defaultTypeQuery = TravelPlans::where('is_student', 0);
+        if(Admin::user()->isRole('driver')) $defaultTypeQuery = $defaultTypeQuery->where('creator_id', Admin::user()->id);
+        $defaultType = $defaultTypeQuery
+        ->get()
+        ->count();
+
+        $studentTypeQuery = TravelPlans::where('is_student', 1);
+        if(Admin::user()->isRole('driver')) $studentTypeQuery = $studentTypeQuery->where('creator_id', Admin::user()->id);
+        $studentType = $studentTypeQuery
+        ->get()
+        ->count();
 
 
         $totalCounts = [
@@ -104,8 +124,6 @@ class Dashboard
         ->orderBy('value', 'DESC')
         ->take(5)->get();
 
-
-
         return view('dashboard.table',compact('totalCounts','title'));
     }
     
@@ -119,9 +137,12 @@ class Dashboard
             $date = Carbon::now()->subMonths($i);
             $month = $date->month;
             $year = $date->year;
-            $count = TravelPlans::whereYear('created_at', '=', $year)
-            ->whereMonth('created_at', '=', $month)
-            ->get()->count();
+            $countQuery = TravelPlans::whereYear('created_at', '=', $year)
+            ->whereMonth('created_at', '=', $month);
+
+            if(Admin::user()->isRole('driver')) $countQuery = $countQuery->where('creator_id', Admin::user()->id);
+            
+            $count = $countQuery->get()->count();
 
             array_push($stats, (object)['name' =>  $date->format('M'), 'value' => $count]);
         }
@@ -162,6 +183,26 @@ class Dashboard
         ];
 
         return view('dashboard.line', compact('title','data','chartId'));
+    }
+
+    public static function driverRating()
+    {
+        $title = 'Driver Rating';
+        $totalCounts = UserTravelPlans::leftJoin('travel_plans', 'user_travel_plans.travel_plan_id', '=', 'travel_plans.id')
+        ->leftJoin('admin_users', 'travel_plans.creator_id', '=', 'admin_users.id')
+        ->groupBy('creator_id')
+        ->select(['admin_users.name AS name', DB::raw('CAST(AVG(rate) AS DECIMAL(5, 2)) AS value')])
+        ->orderBy('value', 'DESC')
+        ->where('creator_id', Admin::user()->id)
+        ->get();
+
+
+        if(!$totalCounts->first()) $totalCounts = [
+            [ 'name' => Admin::user()->username, 'value' => 0]
+        ];
+
+
+        return view('dashboard.table',compact('totalCounts','title'));
     }
 }
 
