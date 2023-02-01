@@ -96,53 +96,17 @@ class Dashboard
 
     public static function ratingCount()
     {
-        $title = 'Rating Count';
-        $chartId = 'ratingCount';
-        $rating = UserTravelPlans::with(["travelPlan"=> function($query){
-            $query->groupBy('creator_id');
-        }])->with("travelPlan.creator")->select(['travelPlan.creator.name AS name', DB::RAW('sum(rate) AS rate')])->get();
-
-        dd($rating);
-
-
-        $totalCounts = [
-            ['name' => 'Default',       'value' => $defaultType],
-            ['name' => 'For Student',   'value' => $studentType],
-        ];
-
-        $data = (object) [
-            "labels" => ['Default','Student'],
-            "datasets" => [
-                (object) [
-                    "label"=> 'Number of Count',
-                    "data"=> [$defaultType, $studentType],
-                    "backgroundColor"=> [
-                        'rgba(255, 99, 132, 0.2)',
-                        'rgba(54, 162, 235, 0.2)',
-                    ],
-                    "borderColor"=>  [
-                        'rgba(255,99,132,1)',
-                        'rgba(54, 162, 235, 1)',
-                    ],
-                    "borderWidth"=> 1,
-                ]
-            ],
-            "options"=> (object) [
-                "scales"=> (object) [
-                    "yAxes"=> [
-                        (object) [
-                        "ticks"=>  (object) [
-                            'beginAtZero'=> true,
-                            ]
-                        ]
-                    ]
-                ]
-            ]
-        ];
+        $title = 'Top 5 Driver By Rating';
+        $totalCounts = UserTravelPlans::leftJoin('travel_plans', 'user_travel_plans.travel_plan_id', '=', 'travel_plans.id')
+        ->leftJoin('admin_users', 'travel_plans.creator_id', '=', 'admin_users.id')
+        ->groupBy('creator_id')
+        ->select(['admin_users.name AS name', DB::raw('CAST(AVG(rate) AS DECIMAL(5, 2)) AS value')])
+        ->orderBy('value', 'DESC')
+        ->take(5)->get();
 
 
 
-        return view('dashboard.pie', compact('totalCounts','title','data','chartId'));
+        return view('dashboard.table',compact('totalCounts','title'));
     }
     
     public static function monthlyTravelPlansCount()

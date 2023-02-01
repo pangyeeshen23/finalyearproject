@@ -17,7 +17,7 @@
                 @foreach($totalCounts as $totalCount)
                 <tr>
                     <td width="120px">{{ $totalCount['name'] }}</td>
-                    <td>{{ $totalCount['value'] }}</td>
+                    <td style="text-align:right;">{{ $totalCount['value'] }}</td>
                 </tr>
                 @endforeach
             </table>

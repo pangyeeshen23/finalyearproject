@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\TravelPlans;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class UserTravelPlans extends Model
 {
@@ -23,6 +24,6 @@ class UserTravelPlans extends Model
 
     
     public function travelPlan(){
-        return $this->belongsTo(TravelPlan::class,'travel_id');
+        return $this->belongsTo(TravelPlans::class,'travel_id');
     }
 }

@@ -9,7 +9,7 @@ class Extension extends BaseExtension
 {
     public $name = 'latlong';
 
-    public $views = __DIR__.'/../resources/views';
+    public $views = __DIR__.'/resources/views';
 
     /**
      * @var array
