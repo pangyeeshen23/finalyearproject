@@ -24,7 +24,21 @@ Route::get('/', function () {
         'laravelVersion' => Application::VERSION,
         'phpVersion' => PHP_VERSION,
     ]);
-});
+})->name('home');
+
+Route::get('/travel-plan', function () {
+    return Inertia::render('Welcome', [
+        'laravelVersion' => Application::VERSION,
+        'phpVersion' => PHP_VERSION,
+    ]);
+})->name('travelPlan');
+
+Route::get('/driver', function () {
+    return Inertia::render('Welcome', [
+        'laravelVersion' => Application::VERSION,
+        'phpVersion' => PHP_VERSION,
+    ]);
+})->name('driver');
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
