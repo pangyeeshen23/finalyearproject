@@ -63,7 +63,7 @@ class UserController extends AdminController
      */
     protected function detail($id)
     {
-        $user= User::where('id',$id)->first();
+        $user = User::where('id',$id)->first();
         $show = new Show(User::findOrFail($id));
         $studentRole = UserRoles::where('slug','STUDENT')->first();
 

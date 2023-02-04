@@ -36,7 +36,7 @@ class ApprovalButton extends AbstractTool
             }
 
             $.post(url, data, 'json').done(() => {
-                //location.reload();
+                location.reload();
             })
         });
 

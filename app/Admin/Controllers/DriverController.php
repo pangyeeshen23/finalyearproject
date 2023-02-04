@@ -57,7 +57,6 @@ class DriverController extends AdminController
      */
     protected function detail($id)
     {
-        $driver = Drivers::findOrFail($id);
         $show = new Show($driver);
 
         $show->field('id', __('Id'));

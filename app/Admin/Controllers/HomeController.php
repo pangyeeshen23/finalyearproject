@@ -44,7 +44,7 @@ class HomeController extends Controller
             })
             ->row(function (Row $row) {
                 
-                if(Admin::user()->isRole('Administrator')){
+                if(Admin::user()->isRole('administrator')){
                     $row->column(4, function (Column $column) {
                         $column->append(Dashboard::ratingCount());
                     });

@@ -25,8 +25,9 @@ class TravelPlansController extends AdminController
      */
     protected function grid()
     {
-
         $grid = new Grid(new TravelPlans());
+
+        if(Admin::user()->isRole('driver')) $grid->model()->where('creator_id', Admin::user()->id);
 
         $grid->column('id', __('Id'));
         $grid->column('name', __('Name'));
