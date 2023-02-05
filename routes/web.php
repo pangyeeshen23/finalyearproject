@@ -4,7 +4,9 @@ use Inertia\Inertia;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Application;
+use App\Http\Controllers\DriverController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\HomepageController;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,21 +19,7 @@ use App\Http\Controllers\ProfileController;
 |
 */
 
-Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
-})->name('home');
-
-Route::get('/travel-plan', function () {
-    return Inertia::render('Welcome', [
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
-})->name('travelPlan');
+Route::get('/', [HomepageController::class, 'show'])->name('home');
 
 Route::get('/driver', function () {
     return Inertia::render('Welcome', [
@@ -39,6 +27,18 @@ Route::get('/driver', function () {
         'phpVersion' => PHP_VERSION,
     ]);
 })->name('driver');
+
+Route::group([ 'prefix' => 'driver'], function(Router $router){
+    $router->get('/list', [DriverController::class, 'getDriverList'])->name('driver.list');
+    $router->post('/details', [DriverController::class, 'postDriverLogin'])->name('driver.details');
+});
+
+Route::group([ 'prefix' => 'travel-plan'], function(Router $router){
+    $router->get('/list', [TravelPlansController::class, 'getTravelPlanList'])->name('travelPlans.list');
+    $router->get('/details', [TravelPlansController::class, 'getTravelPlanDetails'])->name('travelPlans.details');
+    $router->post('/join', [TravelPlansController::class, 'joinTravelPlan'])->name('travelPlans.join');
+});
+
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
