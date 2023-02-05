@@ -5,23 +5,29 @@ namespace App\Http\Controllers;
 use App\Models\TravelPlans;
 use Illuminate\Http\Request;
 use App\Models\UserTravelPlans;
+use Inertia\Inertia;
+use Illuminate\Support\Facades\Route;
 
-class TravelPlanController extends Controller
+class TravelPlansController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function getAll(Request $request)
+    public function list(Request $request)
     {
-        $request->validate([
-            'num_item' => 'required',
-            'page' => 'required',
-        ]);
+        // $request->validate([
+        //     'num_item' => 'required',
+        //     'page' => 'required',
+        // ]);
+
+        if($request->num_item == 0) $request->num_item = 10;
+        if($request->page == 0) $request->page = 0;
+
 
         $skip = $request->num_item  * $request->page;
-        $travelModel = TravelPlans::skip($skip)->take($request->num_item);
+        $travelModel = new TravelPlans();
 
         if($request->driver_id && $request->driver_id)  $travelModel = $travelModel->where('creator_id',$request->driver_id);
         if($request->min_fees && $request->min_fees)  $travelModel = $travelModel->where('fees','>=',$request->min_fees);
@@ -31,11 +37,16 @@ class TravelPlanController extends Controller
         if($request->origin_lat && $request->origin_long)  $travelModel = $travelModel->where('name',$request->name);
         if($request->destination_lat && $request->destination_long)  $travelModel = $travelModel->where('name',$request->name);
         
-        $item = $travelModel->get();
-        return response()->BaseResponse('200', '', $item);
+        $travelPlans =  $travelModel::paginate(10);
+
+        return Inertia::render('TravelPlan', [
+            'canLogin' => Route::has('login'),
+            'canRegister' => Route::has('register'),
+            'travelPlans' => $travelPlans
+        ]);
     }
 
-    public function getDetails(Request $request){
+    public function details(Request $request){
         $request->validate([
             'id' => 'required'
         ]);
@@ -46,7 +57,7 @@ class TravelPlanController extends Controller
     }
 
     
-    public function joinTravelPlan(Request $request){
+    public function join(Request $request){
         $request->validate([
             'user_id' => 'required',
             'travel_plan_id' => 'required'

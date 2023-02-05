@@ -16,7 +16,7 @@ const props = defineProps(["canLogin", "canRegister"]);
                 >
                     <a :href="route('home')" class="flex items-center">
                         <img
-                            src="logo/EzCarpool.png"
+                            src="/logo/EzCarpool.png"
                             class="h-6 mr-3 sm:h-9"
                             alt="Flowbite Logo"
                         />

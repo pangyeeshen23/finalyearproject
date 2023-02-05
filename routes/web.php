@@ -7,6 +7,7 @@ use Illuminate\Foundation\Application;
 use App\Http\Controllers\DriverController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\HomepageController;
+use App\Http\Controllers\TravelPlansController;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,9 +35,9 @@ Route::group([ 'prefix' => 'driver'], function(Router $router){
 });
 
 Route::group([ 'prefix' => 'travel-plan'], function(Router $router){
-    $router->get('/list', [TravelPlansController::class, 'getTravelPlanList'])->name('travelPlans.list');
-    $router->get('/details', [TravelPlansController::class, 'getTravelPlanDetails'])->name('travelPlans.details');
-    $router->post('/join', [TravelPlansController::class, 'joinTravelPlan'])->name('travelPlans.join');
+    $router->get('/list', [TravelPlansController::class, 'list'])->name('travelPlans.list');
+    $router->get('/details', [TravelPlansController::class, 'details'])->name('travelPlans.details');
+    $router->post('/join', [TravelPlansController::class, 'join'])->name('travelPlans.join');
 });
 
 
