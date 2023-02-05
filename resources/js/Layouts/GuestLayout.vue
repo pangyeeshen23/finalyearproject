@@ -14,7 +14,7 @@ const props = defineProps(["canLogin", "canRegister"]);
                 <div
                     class="container flex flex-wrap items-center justify-between mx-auto"
                 >
-                    <a href="{{ base_url(); }}" class="flex items-center">
+                    <a :href="route('home')" class="flex items-center">
                         <img
                             src="logo/EzCarpool.png"
                             class="h-6 mr-3 sm:h-9"

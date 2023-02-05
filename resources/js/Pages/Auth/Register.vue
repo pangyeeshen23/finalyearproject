@@ -13,11 +13,14 @@ const form = useForm({
     password: "",
     password_confirmation: "",
     birthday: null,
+    register_as_student: false,
+    student_application: null,
     terms: false,
 });
 
 const submit = () => {
     form.post(route("register"), {
+        forceFormData: true,
         onFinish: () => form.reset("password", "password_confirmation"),
     });
 };
@@ -27,7 +30,7 @@ const submit = () => {
     <GuestLayout>
         <Head title="Register" />
 
-        <form @submit.prevent="submit">
+        <form @submit.prevent="submit" enctype="multipart/form-data">
             <div>
                 <InputLabel for="name" value="Name" />
 
@@ -122,6 +125,39 @@ const submit = () => {
                 <InputError
                     class="mt-2"
                     :message="form.errors.password_confirmation"
+                />
+            </div>
+
+            <div class="mt-4">
+                <InputLabel
+                    for="register_as_student"
+                    value="Register as Student ?"
+                />
+
+                <input
+                    type="checkbox"
+                    name="registerAsStudent"
+                    v-model="form.register_as_student"
+                />
+            </div>
+
+            <div class="mt-4" v-if="form.register_as_student">
+                <InputLabel
+                    for="student_application"
+                    value="Please Upload A Image of Your Student Card."
+                />
+
+                <TextInput
+                    name="image"
+                    type="file"
+                    class="mt-1 block w-full"
+                    ref="photo"
+                    @input="form.student_application = $event.target.files[0]"
+                />
+
+                <InputError
+                    class="mt-2"
+                    :message="form.errors.student_application"
                 />
             </div>
 
