@@ -25,8 +25,6 @@ class TravelPlansController extends Controller
         if($request->num_item == 0) $request->num_item = 10;
         if($request->page == 0) $request->page = 0;
 
-
-        $skip = $request->num_item  * $request->page;
         $travelModel = new TravelPlans();
 
         $minPrice = null;

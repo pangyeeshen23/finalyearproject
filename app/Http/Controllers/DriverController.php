@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Drivers;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
+use Illuminate\Support\Facades\Route;
 
 class DriverController extends Controller
 {
@@ -12,22 +14,19 @@ class DriverController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function getAll(Request $request)
+    public function list(Request $request)
     {
-        $request->validate([
-            'num_item' => 'required',
-            'page' => 'required',
+        $driverModel = new Drivers();
+
+        $rating = null;
+        if($request->search && $request->search)  $driverModel = $driverModel->where('name', 'LIKE', '%'.$request->search.'%');
+        
+        $drivers =  $driverModel->paginate(10);
+        return Inertia::render('Driver', [
+            'canLogin' => Route::has('login'),
+            'canRegister' => Route::has('register'),
+            'drivers' => $drivers
         ]);
-
-        $skip = $request->num_item  * $request->page;
-        $driverModel = Drivers::with('avgRate')->skip($skip)->take($request->num_item);
-
-        if($request->name && $request->name != null)  $driverModel = $driverModel->where('name',$request->name);
-        if($request->age && $request->age != null)  $driverModel = $driverModel->where('age',$request->age);
-        // if($request->rate && $request->rate != null)  $driverModel = $driverModel->where('rate',$request->rate);
-
-        $item = $driverModel->get();
-        return response()->BaseResponse('200', '', $item);
     }
 
     public function getAllAsOptions(Request $request)

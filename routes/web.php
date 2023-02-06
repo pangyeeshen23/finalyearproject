@@ -22,15 +22,9 @@ use App\Http\Controllers\TravelPlansController;
 
 Route::get('/', [HomepageController::class, 'show'])->name('home');
 
-Route::get('/driver', function () {
-    return Inertia::render('Welcome', [
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
-})->name('driver');
 
 Route::group([ 'prefix' => 'driver'], function(Router $router){
-    $router->get('/list', [DriverController::class, 'getDriverList'])->name('driver.list');
+    $router->get('/list', [DriverController::class, 'list'])->name('driver.list');
     $router->post('/details', [DriverController::class, 'postDriverLogin'])->name('driver.details');
 });
 
