@@ -29,15 +29,49 @@ class TravelPlansController extends Controller
         $skip = $request->num_item  * $request->page;
         $travelModel = new TravelPlans();
 
-        if($request->driver_id && $request->driver_id)  $travelModel = $travelModel->where('creator_id',$request->driver_id);
-        if($request->min_fees && $request->min_fees)  $travelModel = $travelModel->where('fees','>=',$request->min_fees);
-        if($request->max_fees && $request->max_fees)  $travelModel = $travelModel->where('fees','<=',$request->max_fees);
-        if($request->status && $request->status)  $travelModel = $travelModel->where('status',$request->status);
-        if($request->is_student && $request->is_student)  $travelModel = $travelModel->where('is_student',$request->is_student);
-        if($request->origin_lat && $request->origin_long)  $travelModel = $travelModel->where('name',$request->name);
-        if($request->destination_lat && $request->destination_long)  $travelModel = $travelModel->where('name',$request->name);
+        $minPrice = null;
+        $maxPrice = null;
+
+        $is_student_plan = null;
+
+        if($request->price){
+            switch($request->price){
+                case("1"):
+                    $minPrice = 1;
+                    $maxPrice = 25;
+                    break;
+                case("2"):
+                    $minPrice = 25;
+                    $maxPrice = 50;
+                break;
+                case("3"):
+                    $minPrice = 50;
+                    $maxPrice = 75;
+                break;
+                case("4"):
+                    $minPrice = 75;
+                    $maxPrice = 100;
+                break;
+            }
+        }
+
+        if($request->travel_plan_type){
+            switch($request->travel_plan_type){
+                case("1"):
+                    $is_student_plan = 0;
+                break;
+                case("2"):
+                    $is_student_plan = 1;
+                break;
+            }
+        }
+
+        if($request->search && $request->search)  $travelModel = $travelModel->where('name', 'LIKE', '%'.$request->search.'%');
+        if($minPrice)  $travelModel = $travelModel->where('fees','>=',$minPrice);
+        if($maxPrice)  $travelModel = $travelModel->where('fees','<=',$maxPrice);
+        if($is_student_plan)  $travelModel = $travelModel->where('is_student',$is_student_plan);
         
-        $travelPlans =  $travelModel::paginate(10);
+        $travelPlans =  $travelModel->paginate(10);
 
         return Inertia::render('TravelPlan', [
             'canLogin' => Route::has('login'),
