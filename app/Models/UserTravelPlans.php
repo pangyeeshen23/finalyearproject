@@ -12,7 +12,7 @@ class UserTravelPlans extends Model
     protected $fillable = [
         'id',
         'user_id',
-        'travel_plan_id',
+        'travel_plans_id',
         'rate',
         'created_at',
         'updated_at'

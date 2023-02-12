@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\TravelPlans;
+use App\Models\UserTravelPlans;
 use App\Models\DriverApplications;
 use Encore\Admin\Auth\Database\Role;
 use Illuminate\Database\Eloquent\Model;
@@ -49,10 +50,13 @@ class Drivers extends Model
         return $this->hasMany(TravelPlans::class,'creator_id');
     }
 
-    public function avgRate(){
-        return $this->travelPlans()->with('userTravelPlans')->selectRaw('avg(rate) as plan_rate');
+    public function userTravelPlans(){
+        return $this->hasMany(UserTravelPlans::class,'creator_id');
     }
-    
 
-    
+    public function avgRate(){
+        return $this->userTravelPlans()->with('userTravelPlans', function($query){
+            $query->selectRaw('CAST(AVG(rate) AS UNSIGNED) as plan_rate');
+        });
+    }
 }

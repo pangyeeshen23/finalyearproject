@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use Inertia\Inertia;
 use App\Models\Drivers;
 use Illuminate\Http\Request;
-use Inertia\Inertia;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
 class DriverController extends Controller
@@ -19,9 +20,15 @@ class DriverController extends Controller
         $driverModel = new Drivers();
 
         $rating = null;
-        if($request->search && $request->search)  $driverModel = $driverModel->where('name', 'LIKE', '%'.$request->search.'%');
         
+        $driverModel =  $driverModel->whereHas('roles',function($query){
+            $query->where('slug','driver');
+        })->with('avgRate');
+
+        if($request->search && $request->search)  $driverModel = $driverModel->where('name', 'LIKE', '%'.$request->search.'%');
         $drivers =  $driverModel->paginate(10);
+
+
         return Inertia::render('Driver', [
             'canLogin' => Route::has('login'),
             'canRegister' => Route::has('register'),

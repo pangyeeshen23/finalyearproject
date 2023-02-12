@@ -6,6 +6,7 @@ import GuestLayout from "@/Layouts/GuestLayout.vue";
 import { computed } from "vue";
 import { GoogleMap, Marker } from "vue3-google-map";
 import Pagination from "@/Components/Pagination.vue";
+import Rating from "@/Components/Rating.vue";
 
 const filter = {
     search: "",
@@ -49,22 +50,22 @@ const populateImage = (imag_link) => {
                         <p
                             class="text-2xl font-bold tracking-tight text-gray-900 sm:text-2xl"
                         >
-                            Travel Plans
+                            Drivers
                         </p>
                         <div class="flex mt-8">
                             <!-- sidebar -->
                             <div class="flex flex-col w-60 dark:bg-gray-900">
                                 <div class="flex items-center justify-center">
                                     <div class="flex items-center">
-                                        <span
+                                        <!-- <span
                                             class="text-2xl font-semibold text-gray-800 dark:text-white"
                                             >Filter By</span
-                                        >
+                                        > -->
                                     </div>
                                 </div>
 
                                 <nav class="flex flex-col px-4 mt-10">
-                                    <div
+                                    <!-- <div
                                         class="py-2 mt-3 text-sm text-gray-600 rounded dark:text-gray-400"
                                     >
                                         Rating
@@ -106,7 +107,7 @@ const populateImage = (imag_link) => {
                                         >
                                             Filter
                                         </button>
-                                    </div>
+                                    </div> -->
                                 </nav>
                             </div>
 
@@ -183,6 +184,9 @@ const populateImage = (imag_link) => {
                                             >
                                                 {{ item.description }}
                                             </span>
+                                            <Rating
+                                                :rate="item.avgRate"
+                                            ></Rating>
                                             <div
                                                 class="flex mt-4 space-x-3 md:mt-6"
                                             >

@@ -120,7 +120,7 @@ class Dashboard
         $totalCounts = UserTravelPlans::leftJoin('travel_plans', 'user_travel_plans.travel_plan_id', '=', 'travel_plans.id')
         ->leftJoin('admin_users', 'travel_plans.creator_id', '=', 'admin_users.id')
         ->groupBy('creator_id')
-        ->select(['admin_users.name AS name', DB::raw('CAST(AVG(rate) AS DECIMAL(5, 2)) AS value')])
+        ->select(['admin_users.name AS name', DB::raw('CAST(AVG(rate) AS UNSIGNED) AS value')])
         ->orderBy('value', 'DESC')
         ->take(5)->get();
 
@@ -191,7 +191,7 @@ class Dashboard
         $totalCounts = UserTravelPlans::leftJoin('travel_plans', 'user_travel_plans.travel_plan_id', '=', 'travel_plans.id')
         ->leftJoin('admin_users', 'travel_plans.creator_id', '=', 'admin_users.id')
         ->groupBy('creator_id')
-        ->select(['admin_users.name AS name', DB::raw('CAST(AVG(rate) AS DECIMAL(5, 2)) AS value')])
+        ->select(['admin_users.name AS name', DB::raw('CAST(AVG(rate) AS UNSIGNED) AS value')])
         ->orderBy('value', 'DESC')
         ->where('creator_id', Admin::user()->id)
         ->get();
