@@ -24,13 +24,15 @@ class HomepageController extends Controller
     public function show(Request $request)
     {
         $travelPlans = TravelPlans::
-        orderBy('created_at', 'desc') 
+        orderBy('created_at', 'desc')
+        ->where('status', 1) 
         ->take(3)                           
         ->get();
 
         $drivers = Drivers::
-        orderBy('created_at', 'desc') 
-        ->take(4)                           
+        orderBy('created_at', 'desc')->whereHas('roles',function($query){
+            $query->where('slug','driver');
+        })->take(4)                           
         ->get();
 
         return Inertia::render('Welcome', [

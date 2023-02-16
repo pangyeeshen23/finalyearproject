@@ -117,9 +117,9 @@ class Dashboard
     public static function ratingCount()
     {
         $title = 'Top 5 Driver By Rating';
-        $totalCounts = UserTravelPlans::leftJoin('travel_plans', 'user_travel_plans.travel_plan_id', '=', 'travel_plans.id')
+        $totalCounts = UserTravelPlans::leftJoin('travel_plans', 'user_travel_plans.travel_plans_id', '=', 'travel_plans.id')
         ->leftJoin('admin_users', 'travel_plans.creator_id', '=', 'admin_users.id')
-        ->groupBy('creator_id')
+        ->groupBy('travel_plans.creator_id')
         ->select(['admin_users.name AS name', DB::raw('CAST(AVG(rate) AS UNSIGNED) AS value')])
         ->orderBy('value', 'DESC')
         ->take(5)->get();
@@ -188,12 +188,12 @@ class Dashboard
     public static function driverRating()
     {
         $title = 'Driver Rating';
-        $totalCounts = UserTravelPlans::leftJoin('travel_plans', 'user_travel_plans.travel_plan_id', '=', 'travel_plans.id')
+        $totalCounts = UserTravelPlans::leftJoin('travel_plans', 'user_travel_plans.travel_plans_id', '=', 'travel_plans.id')
         ->leftJoin('admin_users', 'travel_plans.creator_id', '=', 'admin_users.id')
-        ->groupBy('creator_id')
+        ->groupBy('travel_plans.creator_id')
         ->select(['admin_users.name AS name', DB::raw('CAST(AVG(rate) AS UNSIGNED) AS value')])
         ->orderBy('value', 'DESC')
-        ->where('creator_id', Admin::user()->id)
+        ->where('travel_plans.creator_id', Admin::user()->id)
         ->get();
 
 

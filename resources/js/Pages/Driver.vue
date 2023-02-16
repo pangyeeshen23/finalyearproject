@@ -34,7 +34,6 @@ const searchSubmit = () => {
 };
 
 const populateImage = (imag_link) => {
-    console.log(imag_link);
     var link = "/storage/admin/" + imag_link;
     return link;
 };
@@ -56,59 +55,10 @@ const populateImage = (imag_link) => {
                             <!-- sidebar -->
                             <div class="flex flex-col w-60 dark:bg-gray-900">
                                 <div class="flex items-center justify-center">
-                                    <div class="flex items-center">
-                                        <!-- <span
-                                            class="text-2xl font-semibold text-gray-800 dark:text-white"
-                                            >Filter By</span
-                                        > -->
-                                    </div>
+                                    <div class="flex items-center"></div>
                                 </div>
 
-                                <nav class="flex flex-col px-4 mt-10">
-                                    <!-- <div
-                                        class="py-2 mt-3 text-sm text-gray-600 rounded dark:text-gray-400"
-                                    >
-                                        Rating
-
-                                        <div>
-                                            <select
-                                                id="countries"
-                                                v-model="filter.rate"
-                                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                            >
-                                                <option value="0" selected>
-                                                    Select a rate
-                                                </option>
-                                                <option value="1">
-                                                    1 Star
-                                                </option>
-                                                <option value="2">
-                                                    2 Star
-                                                </option>
-                                                <option value="3">
-                                                    3 Star
-                                                </option>
-                                                <option value="4">
-                                                    4 Star
-                                                </option>
-                                                <option value="5">
-                                                    5 Star
-                                                </option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div
-                                        class="py-2 mt-3 text-sm text-gray-600 rounded dark:text-gray-400"
-                                    >
-                                        <button
-                                            type="button"
-                                            class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
-                                            @click="searchSubmit()"
-                                        >
-                                            Filter
-                                        </button>
-                                    </div> -->
-                                </nav>
+                                <nav class="flex flex-col px-4 mt-10"></nav>
                             </div>
 
                             <!-- the items i want to put in a 3 grid layout !-->
@@ -191,7 +141,14 @@ const populateImage = (imag_link) => {
                                                 class="flex mt-4 space-x-3 md:mt-6"
                                             >
                                                 <a
-                                                    href="#"
+                                                    :href="
+                                                        route(
+                                                            'driver.details',
+                                                            {
+                                                                id: item.id,
+                                                            }
+                                                        )
+                                                    "
                                                     class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
                                                 >
                                                     Details

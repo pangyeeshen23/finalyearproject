@@ -27,7 +27,7 @@ class DriverController extends Controller
 
         if($request->search && $request->search)  $driverModel = $driverModel->where('name', 'LIKE', '%'.$request->search.'%');
         $drivers =  $driverModel->paginate(10);
-
+        
 
         return Inertia::render('Driver', [
             'canLogin' => Route::has('login'),

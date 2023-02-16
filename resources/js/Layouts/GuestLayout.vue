@@ -3,6 +3,16 @@ import ApplicationLogo from "@/Components/ApplicationLogo.vue";
 import { Link } from "@inertiajs/inertia-vue3";
 
 const props = defineProps(["canLogin", "canRegister"]);
+
+const populateActiveStatus = (href) => {
+    console.log(href);
+    console.log(location.pathname.substr(1));
+
+    if (location.pathname.substr(1) == href)
+        return "block py-2 pl-3 pr-4 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 dark:text-white";
+    else
+        return "block py-2 pl-3 pr-4 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-gray-400 md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent";
+};
 </script>
 
 <template>
@@ -57,7 +67,7 @@ const props = defineProps(["canLogin", "canRegister"]);
                             <li>
                                 <a
                                     :href="route('home')"
-                                    class="block py-2 pl-3 pr-4 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 dark:text-white"
+                                    :class="populateActiveStatus('')"
                                     aria-current="page"
                                     >Home</a
                                 >
@@ -65,35 +75,37 @@ const props = defineProps(["canLogin", "canRegister"]);
                             <li>
                                 <a
                                     :href="route('travelPlans.list')"
-                                    class="block py-2 pl-3 pr-4 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-gray-400 md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
+                                    :class="
+                                        populateActiveStatus('travel-plan/list')
+                                    "
                                     >Travel Plan</a
                                 >
                             </li>
                             <li>
                                 <a
                                     :href="route('driver.list')"
-                                    class="block py-2 pl-3 pr-4 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-gray-400 md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
+                                    :class="populateActiveStatus('driver/list')"
                                     >Driver</a
                                 >
                             </li>
                             <li v-if="$page.props.auth.user">
                                 <a
                                     :href="route('dashboard')"
-                                    class="block py-2 pl-3 pr-4 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-gray-400 md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
+                                    :class="populateActiveStatus('dashboard')"
                                     >Dashboard</a
                                 >
                             </li>
                             <li v-if="canLogin">
                                 <a
                                     :href="route('login')"
-                                    class="block py-2 pl-3 pr-4 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-gray-400 md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
+                                    :class="populateActiveStatus('login')"
                                     >Login</a
                                 >
                             </li>
                             <li v-if="canLogin">
                                 <a
                                     :href="route('register')"
-                                    class="block py-2 pl-3 pr-4 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-gray-400 md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
+                                    :class="populateActiveStatus('register')"
                                     >Register</a
                                 >
                             </li>
