@@ -47,6 +47,15 @@ const rows = [
         rate: "0",
     },
 ];
+
+const populateImage = (imag_link) => {
+    var link = "/storage/admin/" + imag_link;
+    return link;
+};
+
+const joinTravelPlan = () => {
+    return link;
+};
 </script>
 
 <template>
@@ -229,6 +238,60 @@ const rows = [
                                         >
                                             {{ detail.description }}
                                         </p>
+                                        <hr class="mt-4 mb-4" />
+                                        <h5
+                                            class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white"
+                                        >
+                                            Driver
+                                        </h5>
+                                        <div class="w-1/2 p-2 border-2 rounded">
+                                            <div class="flex flex-row gap-px">
+                                                <div
+                                                    class="flex flex-col basis-1/4 items-center border-r-2"
+                                                >
+                                                    <img
+                                                        class="w-24 h-24 mb-3 rounded-full shadow-lg"
+                                                        :src="
+                                                            populateImage(
+                                                                detail.creator
+                                                                    .avatar
+                                                            )
+                                                        "
+                                                        alt="Bonnie image"
+                                                    />
+                                                </div>
+                                                <div
+                                                    class="flex flex-col basis-3/4 gap-px"
+                                                >
+                                                    <p
+                                                        class="text-lg font-bold tracking-tight text-gray-900 sm:text-lg"
+                                                    >
+                                                        Name :
+                                                        {{
+                                                            detail.creator.name
+                                                        }}
+                                                    </p>
+                                                    <p
+                                                        class="text-lg font-bold tracking-tight text-gray-900 sm:text-lg"
+                                                    >
+                                                        Email Address :
+                                                        {{
+                                                            detail.creator
+                                                                .email_address
+                                                        }}
+                                                    </p>
+                                                    <p
+                                                        class="text-lg font-bold tracking-tight text-gray-900 sm:text-lg"
+                                                    >
+                                                        Phone Number :
+                                                        {{
+                                                            detail.creator
+                                                                .phone_number
+                                                        }}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
