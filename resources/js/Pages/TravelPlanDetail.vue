@@ -245,7 +245,7 @@ const joinTravelPlan = () => {
                                             Driver
                                         </h5>
                                         <div class="w-1/2 p-2 border-2 rounded">
-                                            <div class="flex flex-row gap-px">
+                                            <div class="flex flex-row gap-1">
                                                 <div
                                                     class="flex flex-col basis-1/4 items-center border-r-2"
                                                 >
@@ -261,7 +261,7 @@ const joinTravelPlan = () => {
                                                     />
                                                 </div>
                                                 <div
-                                                    class="flex flex-col basis-3/4 gap-px"
+                                                    class="flex flex-col basis-3/4 gap-1"
                                                 >
                                                     <p
                                                         class="text-lg font-bold tracking-tight text-gray-900 sm:text-lg"
