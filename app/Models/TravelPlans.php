@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\User;
+use App\Models\Drivers;
 use App\Models\UserTravelPlans;
 use Illuminate\Database\Eloquent\Model;
 use Encore\Admin\Auth\Database\Administrator;
@@ -31,7 +32,7 @@ class TravelPlans extends Model
     protected $casts = [];
 
     public function creator(){
-        return $this->belongsTo(Admin::class,'creator_id');
+        return $this->belongsTo(Drivers::class,'creator_id');
     }
 
     public function users(){

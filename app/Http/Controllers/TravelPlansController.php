@@ -83,9 +83,9 @@ class TravelPlansController extends Controller
             'id' => 'required'
         ]);
 
-        $item = TravelPlans::find($request->id);
-        if(!$item) return response()->BaseResponse('404','Driver Not Found','');
-        return response()->BaseResponse('200', '', $item);
+        $detail = TravelPlans::with('userTravelPlans')->with('creator')->find($request->id);
+        if(!$detail) return Inertia::render('Error',['canLogin' => Route::has('login'), 'canRegister' => Route::has('register'),'errMsg' => 'Entity Not Found']);
+        return Inertia::render('TravelPlanDetail', ['canLogin' => Route::has('login'), 'canRegister' => Route::has('register'), 'detail' => $detail ]);
     }
 
     

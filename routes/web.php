@@ -25,7 +25,7 @@ Route::get('/', [HomepageController::class, 'show'])->name('home');
 
 Route::group([ 'prefix' => 'driver'], function(Router $router){
     $router->get('/list', [DriverController::class, 'list'])->name('driver.list');
-    $router->post('/details', [DriverController::class, 'postDriverLogin'])->name('driver.details');
+    $router->post('/details', [DriverController::class, 'details'])->name('driver.details');
 });
 
 Route::group([ 'prefix' => 'travel-plan'], function(Router $router){
