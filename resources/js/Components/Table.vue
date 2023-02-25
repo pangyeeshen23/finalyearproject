@@ -3,9 +3,6 @@ const props = defineProps({
     columns: Array,
     rows: Array,
 });
-
-console.log(props.columns);
-console.log(props.rows[0][props.columns.data]);
 </script>
 
 <template>

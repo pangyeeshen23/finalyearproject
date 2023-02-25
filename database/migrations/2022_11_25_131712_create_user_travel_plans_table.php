@@ -21,7 +21,7 @@ return new class extends Migration
             $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('travel_plans_id')->references('id')->on('travel_plans');
             $table->foreign("creator_id")->references('id')->on('admin_users')->onDelete('cascade');
-            $table->integer('rate');
+            $table->integer('rate')->nullable();
             $table->timestamps();
         });
     }

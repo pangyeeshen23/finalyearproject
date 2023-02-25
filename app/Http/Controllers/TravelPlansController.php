@@ -74,6 +74,7 @@ class TravelPlansController extends Controller
         return Inertia::render('TravelPlan', [
             'canLogin' => Route::has('login'),
             'canRegister' => Route::has('register'),
+            'canResetPassword' => Route::has('password.request'),
             'travelPlans' => $travelPlans
         ]);
     }
@@ -83,12 +84,15 @@ class TravelPlansController extends Controller
             'id' => 'required'
         ]);
 
+        $user = auth()->user();
         $detail = TravelPlans::with('userTravelPlans')->with('creator')->find($request->id);
+        $joinRecord = UserTravelPlans::where('travel_plans_id', '=',$request->id )->where('user_id','=',$user->id)->first();
+        $allPassenger = UserTravelPlans::where('travel_plans_id', '=',$request->id)->with('user')->get();
+
         if(!$detail) return Inertia::render('Error',['canLogin' => Route::has('login'), 'canRegister' => Route::has('register'),'errMsg' => 'Entity Not Found']);
-        return Inertia::render('TravelPlanDetail', ['canLogin' => Route::has('login'), 'canRegister' => Route::has('register'), 'detail' => $detail ]);
+        return Inertia::render('TravelPlanDetail', ['canLogin' => Route::has('login'), 'canRegister' => Route::has('register'), 'detail' => $detail, 'joinRecord' => $joinRecord, 'allPassenger' => $allPassenger  ]);
     }
 
-    
     public function join(Request $request){
         $request->validate([
             'user_id' => 'required',
@@ -96,9 +100,11 @@ class TravelPlansController extends Controller
         ]);
 
         try{
+            $travelPlan = TravelPlans::find($request->travel_plan_id);
             $userTravelPlan = new UserTravelPlans();
             $userTravelPlan->user_id = $request->user_id;
-            $userTravelPlan->travel_plan_id = $request->travel_plan_id;
+            $userTravelPlan->travel_plans_id = $request->travel_plan_id;
+            $userTravelPlan->creator_id = $travelPlan->creator_id;
             $userTravelPlan->save();
         }catch(Throwable $ex){
             return response()->BaseResponse('500','System error');
