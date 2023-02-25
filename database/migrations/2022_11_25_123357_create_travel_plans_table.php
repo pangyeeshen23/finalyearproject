@@ -18,8 +18,10 @@ return new class extends Migration
             $table->string('name');
             $table->string('description');
             $table->string('meeting_point');
+            $table->string('depart_name');
             $table->decimal('depart_lat');
             $table->decimal('depart_long');
+            $table->string('destination_name');
             $table->decimal('destination_lat');
             $table->decimal('destination_long');
             $table->decimal('fees');

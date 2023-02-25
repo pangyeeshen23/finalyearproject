@@ -60,7 +60,9 @@ class TravelPlansController extends AdminController
         $show->field('name', __('Name'));
         $show->field('description', __('Description'));
         $show->field('meeting_point', __('Meeting point'));
+        $show->field('depart_name', __('Depart Location Name'));
         $show->field(__('Depart'))->latlong('depart_lat', 'depart_long','depart_lat', 'depart_long', $height = 400, $zoom = 15);
+        $show->field('destination_name', __('Destination Location Name'));
         $show->field(__('Destination'))->latlong('destination_lat', 'destination_long','destination_lat', 'destination_long', $height = 400, $zoom = 15);
         $show->field('fees', __('Fees'));
         $show->field('is_student', __('For student only ?'));
@@ -86,7 +88,9 @@ class TravelPlansController extends AdminController
         $form->text('name', __('Name'))->required();
         $form->text('description', __('Description'))->required();
         $form->text('meeting_point', __('Meeting point'))->required();
+        $form->text('depart_name', __('Depart Location Name'))->required();
         $form->latlong('depart_lat', 'depart_long', 'Depart')->default(['lat' => 3.1569, 'lng' => 101.7123])->required();
+        $form->text('destination_name', __('Destination Location Name'))->required();
         $form->latlong('destination_lat', 'destination_long', 'Destination')->default(['lat' => 3.1569, 'lng' => 101.7123])->required();
         $form->decimal('fees', __('Fees/Person'))->required();
         $form->number('num_passengers', __('Number of Passenger'))->required();
