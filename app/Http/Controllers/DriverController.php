@@ -23,12 +23,10 @@ class DriverController extends Controller
         
         $driverModel =  $driverModel->whereHas('roles',function($query){
             $query->where('slug','driver');
-        })->with('avgRate');
+        })->withAvg('userTravelPlans','rate')->where('rate','=', $request->rate);
 
         if($request->search && $request->search)  $driverModel = $driverModel->where('name', 'LIKE', '%'.$request->search.'%');
         $drivers =  $driverModel->paginate(10);
-        
-
         return Inertia::render('Driver', [
             'canLogin' => Route::has('login'),
             'canRegister' => Route::has('register'),

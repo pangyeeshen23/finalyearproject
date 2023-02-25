@@ -53,10 +53,4 @@ class Drivers extends Model
     public function userTravelPlans(){
         return $this->hasMany(UserTravelPlans::class,'creator_id');
     }
-
-    public function avgRate(){
-        return $this->userTravelPlans()->with('userTravelPlans', function($query){
-            $query->selectRaw('CAST(AVG(rate) AS UNSIGNED) as plan_rate');
-        });
-    }
 }

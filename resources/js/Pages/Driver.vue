@@ -55,10 +55,55 @@ const populateImage = (imag_link) => {
                             <!-- sidebar -->
                             <div class="flex flex-col w-60 dark:bg-gray-900">
                                 <div class="flex items-center justify-center">
-                                    <div class="flex items-center"></div>
+                                    <div class="flex items-center">
+                                        <span
+                                            class="text-2xl font-semibold text-gray-800 dark:text-white"
+                                            >Filter By</span
+                                        >
+                                    </div>
                                 </div>
 
-                                <nav class="flex flex-col px-4 mt-10"></nav>
+                                <nav class="flex flex-col px-4 mt-10">
+                                    <div
+                                        class="py-2 text-sm text-gray-700 rounded dark:text-gray-100 dark:bg-gray-800"
+                                    >
+                                        Rating Range
+                                        <div>
+                                            <select
+                                                id="rate_range"
+                                                v-model="filter.rate"
+                                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                            >
+                                                <option value="0" selected>
+                                                    Select a rate range
+                                                </option>
+                                                <option value="1">
+                                                    0 star - 1 star
+                                                </option>
+                                                <option value="2">
+                                                    1 star - 2 star
+                                                </option>
+                                                <option value="3">
+                                                    3 star - 4 star
+                                                </option>
+                                                <option value="4">
+                                                    5 star - 5 star
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div
+                                        class="py-2 mt-3 text-sm text-gray-600 rounded dark:text-gray-400"
+                                    >
+                                        <button
+                                            type="button"
+                                            class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+                                            @click="searchSubmit()"
+                                        >
+                                            Filter
+                                        </button>
+                                    </div>
+                                </nav>
                             </div>
 
                             <!-- the items i want to put in a 3 grid layout !-->
