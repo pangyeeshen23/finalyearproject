@@ -86,8 +86,9 @@ class TravelPlansController extends Controller
 
         $user = auth()->user();
         $detail = TravelPlans::with('userTravelPlans')->with('creator')->find($request->id);
-        $joinRecord = UserTravelPlans::where('travel_plans_id', '=',$request->id )->where('user_id','=',$user->id)->first();
-        $allPassenger = UserTravelPlans::where('travel_plans_id', '=',$request->id)->with('user')->get();
+        $allPassenger = UserTravelPlans::where('travel_plans_id', '=', $request->id)->with('user')->get();
+        if($user) $joinRecord = UserTravelPlans::where('travel_plans_id', '=',$request->id )->where('user_id','=',$user->id)->first();
+        else $joinRecord = null;
 
         if(!$detail) return Inertia::render('Error',['canLogin' => Route::has('login'), 'canRegister' => Route::has('register'),'errMsg' => 'Entity Not Found']);
         return Inertia::render('TravelPlanDetail', ['canLogin' => Route::has('login'), 'canRegister' => Route::has('register'), 'detail' => $detail, 'joinRecord' => $joinRecord, 'allPassenger' => $allPassenger  ]);
@@ -99,8 +100,12 @@ class TravelPlansController extends Controller
             'travel_plan_id' => 'required'
         ]);
 
+        $travelPlan = TravelPlans::find($request->travel_plan_id);
+        $userTravelPlans = UserTravelPlans::find($request->travel_plan_id)->count();
+
+        if($userTravelPlans >= $travelPlan) return response()->BaseResponse('200','Travel Plan Passenger Limit', 'The Travel Plan has reached it maximun passenger number');
+
         try{
-            $travelPlan = TravelPlans::find($request->travel_plan_id);
             $userTravelPlan = new UserTravelPlans();
             $userTravelPlan->user_id = $request->user_id;
             $userTravelPlan->travel_plans_id = $request->travel_plan_id;

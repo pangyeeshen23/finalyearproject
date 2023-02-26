@@ -9,12 +9,15 @@ import { ref } from "vue";
 const props = defineProps({
     mustVerifyEmail: Boolean,
     status: String,
+    role: String,
 });
 
 const user = usePage().props.value.auth.user;
+console.log(user);
 
 const form = useForm({
     name: user.name,
+    username: user.username,
     birthday: user.birthday,
 });
 </script>
@@ -39,8 +42,23 @@ const form = useForm({
                 <InputLabel for="username" value="Name" />
 
                 <p class="mt-1 block w-full font-semibold">
-                    {{ user.username }}
+                    {{ user.name }}
                 </p>
+            </div>
+            <div>
+                <InputLabel for="username" value="username" />
+
+                <TextInput
+                    id="username"
+                    type="text"
+                    class="mt-1 block w-full"
+                    v-model="form.username"
+                    required
+                    autofocus
+                    autocomplete="username"
+                />
+
+                <InputError class="mt-2" :message="form.errors.name" />
             </div>
             <div>
                 <InputLabel for="name" value="Name" />
@@ -79,6 +97,13 @@ const form = useForm({
                 />
 
                 <InputError class="mt-2" :message="form.errors.birthday" />
+            </div>
+            <div>
+                <InputLabel for="role" value="Role" />
+
+                <p class="mt-1 block w-full font-semibold">
+                    {{ role }}
+                </p>
             </div>
             <div
                 v-if="props.mustVerifyEmail && user.email_verified_at === null"

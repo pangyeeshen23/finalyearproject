@@ -25,10 +25,10 @@ class UserTravelPlans extends Model
 
     
     public function travelPlan(){
-        return $this->belongsTo(TravelPlans::class, 'travel_id');
+        return $this->belongsTo(TravelPlans::class, 'travel_plans_id');
     }
 
     public function user(){
-        return $this->hasOne(User::class, 'id');
+        return $this->belongsTo(User::class, 'user_id');
     }
 }

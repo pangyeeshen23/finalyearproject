@@ -20,11 +20,20 @@ const showingNavigationDropdown = ref(false);
                         <div class="flex">
                             <!-- Logo -->
                             <div class="shrink-0 flex items-center">
-                                <Link :href="route('dashboard')">
-                                    <ApplicationLogo
-                                        class="block h-9 w-auto fill-current text-gray-800"
+                                <a
+                                    :href="route('home')"
+                                    class="flex items-center"
+                                >
+                                    <img
+                                        src="/logo/EzCarpool.png"
+                                        class="h-6 mr-3 sm:h-9"
+                                        alt="Flowbite Logo"
                                     />
-                                </Link>
+                                    <span
+                                        class="self-center text-xl font-semibold whitespace-nowrap dark:text-white"
+                                        >EZ Carpool</span
+                                    >
+                                </a>
                             </div>
 
                             <!-- Navigation Links -->
@@ -36,6 +45,17 @@ const showingNavigationDropdown = ref(false);
                                     :active="route().current('dashboard')"
                                 >
                                     Dashboard
+                                </NavLink>
+                            </div>
+
+                            <div
+                                class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex"
+                            >
+                                <NavLink
+                                    :href="route('home')"
+                                    :active="route().current('home')"
+                                >
+                                    Home
                                 </NavLink>
                             </div>
                         </div>

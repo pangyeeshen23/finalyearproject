@@ -7,34 +7,75 @@ import { computed } from "vue";
 import { GoogleMap, Marker } from "vue3-google-map";
 import Pagination from "@/Components/Pagination.vue";
 import Rating from "@/Components/Rating.vue";
+import Table from "@/Components/Table.vue";
 
 const filter = {
     search: "",
-    rate: 0,
+    rateSortBy: 0,
 };
 
-defineProps({
+var props = defineProps({
     canLogin: Boolean,
     canRegister: Boolean,
-    drivers: Object,
+    driver: Object,
+    totalCompletedTravelPLans: Number,
+    totalTravelPlans: Number,
+    totalRatingReceived: Number,
 });
 
-const searchSubmit = () => {
-    Inertia.get(
-        "/driver/list",
-        {
-            search: filter.search,
-            rate: filter.rate,
-        },
-        {
-            preserveState: true,
-        }
-    );
-};
+const columns = [
+    {
+        display: "Travel Plan",
+        data: "name",
+    },
+    {
+        display: "Depart Location",
+        data: "depart_name",
+    },
+    {
+        display: "Destination Location",
+        data: "destination_name",
+    },
+    {
+        display: "Fees",
+        data: "fees",
+    },
+    {
+        display: "Only For Student",
+        data: "is_student",
+    },
+    {
+        display: "Created At",
+        data: "created_date",
+    },
+    {
+        display: "Action",
+        format: "navigation",
+        link: "/travel-plan/details?id=",
+        data: "id",
+    },
+];
 
 const populateImage = (imag_link) => {
     var link = "/storage/admin/" + imag_link;
     return link;
+};
+
+const formatTravelPlans = () => {
+    var rows = _.map(props.driver.travel_plans, function (n) {
+        return {
+            id: n.id,
+            name: n.name,
+            depart_name: n.depart_name,
+            destination_name: n.destination_name,
+            fees: n.fees,
+            is_student: n.is_student ? "True" : "False",
+            created_date: n.created_at
+                ? new Date(n.created_at).toDateString()
+                : "No Date",
+        };
+    });
+    return rows;
 };
 </script>
 
@@ -44,136 +85,213 @@ const populateImage = (imag_link) => {
         <GuestLayout :can-login="{ canLogin }" :can-register="{ canRegister }">
             <slot>
                 <main>
-                    <div class="relative px-6 lg:px-8">
-                        <p
-                            class="text-2xl font-bold tracking-tight text-gray-900 sm:text-2xl"
-                        >
-                            Drivers
-                        </p>
-                        <div class="flex mt-8">
-                            <!-- sidebar -->
-                            <div class="flex flex-col w-60 dark:bg-gray-900">
-                                <div class="flex items-center justify-center">
-                                    <div class="flex items-center"></div>
-                                </div>
-
-                                <nav class="flex flex-col px-4 mt-10"></nav>
-                            </div>
-
-                            <!-- the items i want to put in a 3 grid layout !-->
-                            <div class="w-full">
-                                <form>
-                                    <label
-                                        for="default-search"
-                                        class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white"
-                                        >Search</label
-                                    >
-                                    <div class="relative">
-                                        <div
-                                            class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none"
-                                        >
-                                            <svg
-                                                aria-hidden="true"
-                                                class="w-5 h-5 text-gray-500 dark:text-gray-400"
-                                                fill="none"
-                                                stroke="currentColor"
-                                                viewBox="0 0 24 24"
-                                                xmlns="http://www.w3.org/2000/svg"
-                                            >
-                                                <path
-                                                    stroke-linecap="round"
-                                                    stroke-linejoin="round"
-                                                    stroke-width="2"
-                                                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                                                ></path>
-                                            </svg>
-                                        </div>
-                                        <input
-                                            type="search"
-                                            id="default-search"
-                                            v-model="filter.search"
-                                            class="block w-full p-4 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                            placeholder="Search By Title"
-                                            required
-                                        />
-                                        <button
-                                            type="button"
-                                            class="text-white absolute right-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                                            @click="searchSubmit()"
-                                        >
-                                            Search
-                                        </button>
-                                    </div>
-                                </form>
-
-                                <div
-                                    class="p-4 grid grid-cols-4 gap-4 mt-6 bg-gray-50 w-full"
+                    <div class="relative px-6 py-6 lg:px-8 bg-gray-50 rounded">
+                        <div class="w-full">
+                            <div>
+                                <p
+                                    class="text-2xl font-bold tracking-tight text-gray-900 sm:text-2xl"
                                 >
+                                    Driver - {{ driver.name }}
+                                </p>
+                            </div>
+                        </div>
+                        <div
+                            class="flex flex-row pt-5 space-x-4 items-stretch w-full"
+                        >
+                            <div class="flex flex-col basis-2/12">
+                                <!-- the items i want to put in a 3 grid layout !-->
+                                <div class="w-full">
                                     <div
-                                        class="max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700"
-                                        v-for="item in drivers.data"
+                                        class="border border-gray-200 bg-white rounded-lg shadow dark:bg-gray-800 dark:border-gray-700"
                                     >
                                         <div
-                                            class="flex flex-col items-center pb-10"
+                                            class="flex flex-col items-center pb-10 pt-2"
                                         >
                                             <img
                                                 class="w-24 h-24 mb-3 rounded-full shadow-lg"
                                                 :src="
-                                                    populateImage(item.avatar)
+                                                    populateImage(driver.avatar)
                                                 "
                                                 alt="Bonnie image"
                                             />
                                             <h5
                                                 class="mb-1 text-xl font-medium text-gray-900 dark:text-white"
                                             >
-                                                {{ item.name }}
+                                                {{ driver.name }}
                                             </h5>
                                             <span
                                                 class="text-sm text-gray-500 dark:text-gray-400"
                                             >
-                                                {{ item.description }}
+                                                {{ driver.description }}
                                             </span>
                                             <Rating
-                                                :rate="item.avgRate"
+                                                :rate="driver.rate"
                                             ></Rating>
-                                            <div
-                                                class="flex mt-4 space-x-3 md:mt-6"
-                                            >
-                                                <a
-                                                    :href="
-                                                        route(
-                                                            'driver.details',
-                                                            {
-                                                                id: item.id,
-                                                            }
-                                                        )
-                                                    "
-                                                    class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="flex flex-col basis-10/12">
+                                <!-- the items i want to put in a 3 grid layout !-->
+                                <div class="w-full h-full">
+                                    <div
+                                        class="border border-gray-200 bg-white rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 h-full"
+                                    >
+                                        <div
+                                            class="grid grid-cols-3 gap-4 h-full"
+                                        >
+                                            <div class="text-center h-full">
+                                                <div
+                                                    class="flex flex-col items-center pb-5 pt-2"
                                                 >
-                                                    Details
                                                     <svg
-                                                        aria-hidden="true"
-                                                        class="w-4 h-4 ml-2 -mr-1"
-                                                        fill="currentColor"
-                                                        viewBox="0 0 20 20"
                                                         xmlns="http://www.w3.org/2000/svg"
+                                                        viewBox="0 0 24 24"
+                                                        fill="currentColor"
+                                                        class="w-20 h-20 fill-blue-500"
                                                     >
                                                         <path
-                                                            fill-rule="evenodd"
-                                                            d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
-                                                            clip-rule="evenodd"
-                                                        ></path>
+                                                            fillRule="evenodd"
+                                                            d="M1.5 7.125c0-1.036.84-1.875 1.875-1.875h6c1.036 0 1.875.84 1.875 1.875v3.75c0 1.036-.84 1.875-1.875 1.875h-6A1.875 1.875 0 011.5 10.875v-3.75zm12 1.5c0-1.036.84-1.875 1.875-1.875h5.25c1.035 0 1.875.84 1.875 1.875v8.25c0 1.035-.84 1.875-1.875 1.875h-5.25a1.875 1.875 0 01-1.875-1.875v-8.25zM3 16.125c0-1.036.84-1.875 1.875-1.875h5.25c1.036 0 1.875.84 1.875 1.875v2.25c0 1.035-.84 1.875-1.875 1.875h-5.25A1.875 1.875 0 013 18.375v-2.25z"
+                                                            clipRule="evenodd"
+                                                        />
                                                     </svg>
-                                                </a>
+                                                </div>
+                                                <p class="font-bold">
+                                                    Total Travel Plans
+                                                </p>
+                                                <p
+                                                    class="font-bold text-2xl mt-2"
+                                                >
+                                                    {{ totalTravelPlans }}
+                                                </p>
+                                            </div>
+                                            <div class="text-center h-full">
+                                                <div
+                                                    class="flex flex-col items-center pb-5 pt-2"
+                                                >
+                                                    <svg
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                        viewBox="0 0 24 24"
+                                                        fill="currentColor"
+                                                        class="w-20 h-20 fill-green-500"
+                                                    >
+                                                        <path
+                                                            fillRule="evenodd"
+                                                            d="M8.603 3.799A4.49 4.49 0 0112 2.25c1.357 0 2.573.6 3.397 1.549a4.49 4.49 0 013.498 1.307 4.491 4.491 0 011.307 3.497A4.49 4.49 0 0121.75 12a4.49 4.49 0 01-1.549 3.397 4.491 4.491 0 01-1.307 3.497 4.491 4.491 0 01-3.497 1.307A4.49 4.49 0 0112 21.75a4.49 4.49 0 01-3.397-1.549 4.49 4.49 0 01-3.498-1.306 4.491 4.491 0 01-1.307-3.498A4.49 4.49 0 012.25 12c0-1.357.6-2.573 1.549-3.397a4.49 4.49 0 011.307-3.497 4.49 4.49 0 013.497-1.307zm7.007 6.387a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z"
+                                                            clipRule="evenodd"
+                                                        />
+                                                    </svg>
+                                                </div>
+                                                <p class="font-bold">
+                                                    Total Completed Travel Plans
+                                                </p>
+                                                <p
+                                                    class="font-bold text-2xl mt-2"
+                                                >
+                                                    {{
+                                                        totalCompletedTravelPLans
+                                                    }}
+                                                </p>
+                                            </div>
+                                            <div class="text-center h-full">
+                                                <div
+                                                    class="flex flex-col items-center pb-5 pt-2"
+                                                >
+                                                    <svg
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                        viewBox="0 0 24 24"
+                                                        fill="currentColor"
+                                                        class="w-20 h-20 fill-yellow-500"
+                                                    >
+                                                        <path
+                                                            fillRule="evenodd"
+                                                            d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007 5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433 2.082-5.006z"
+                                                            clipRule="evenodd"
+                                                        />
+                                                    </svg>
+                                                </div>
+                                                <p class="font-bold">
+                                                    Total Rate Received
+                                                </p>
+                                                <p
+                                                    class="font-bold text-2xl mt-2"
+                                                >
+                                                    {{ totalRatingReceived }}
+                                                </p>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div>
-                                    <Pagination
-                                        class="mt-6"
-                                        :links="drivers.links"
-                                    />
+                            </div>
+                        </div>
+                        <div class="flex mt-8">
+                            <div class="w-full">
+                                <div
+                                    class="border border-gray-200 bg-white rounded-lg shadow dark:bg-gray-800 dark:border-gray-700"
+                                >
+                                    <div class="p-5">
+                                        <h5
+                                            class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white"
+                                        >
+                                            Details
+                                        </h5>
+                                        <div>
+                                            <p
+                                                class="text-lg font-bold tracking-tight text-gray-900 sm:text-lg"
+                                            >
+                                                Age : {{ driver.age }}
+                                            </p>
+                                        </div>
+                                        <div>
+                                            <p
+                                                class="text-lg font-bold tracking-tight text-gray-900 sm:text-lg"
+                                            >
+                                                Email Address :
+                                                {{ driver.email_address }}
+                                            </p>
+                                        </div>
+                                        <div>
+                                            <p
+                                                class="text-lg font-bold tracking-tight text-gray-900 sm:text-lg"
+                                            >
+                                                Birthday :
+                                                {{ driver.birthday }}
+                                            </p>
+                                        </div>
+                                        <div>
+                                            <p
+                                                class="text-lg font-bold tracking-tight text-gray-900 sm:text-lg"
+                                            >
+                                                Phone Number :
+                                                {{ driver.phone_number }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex mt-8">
+                            <div class="w-full">
+                                <div
+                                    class="border border-gray-200 bg-white rounded-lg shadow dark:bg-gray-800 dark:border-gray-700"
+                                >
+                                    <div class="p-5">
+                                        <h5
+                                            class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white"
+                                        >
+                                            Active Travel Plans
+                                        </h5>
+                                        <div
+                                            class="relative overflow-x-auto shadow-md sm:rounded-lg"
+                                        >
+                                            <Table
+                                                :columns="columns"
+                                                :rows="formatTravelPlans()"
+                                            ></Table>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>

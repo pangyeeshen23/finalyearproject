@@ -43,29 +43,14 @@ const columns = [
     },
 ];
 
-const rows = [
-    {
-        username: "demo",
-        created_date: "19/2/2023",
-        rate: "0",
-    },
-    {
-        username: "demo2",
-        created_date: "17/2/2023",
-        rate: "0",
-    },
-    {
-        username: "demo5",
-        created_date: "5/2/2023",
-        rate: "0",
-    },
-];
-
 const formatPassengerRows = () => {
+    console.log(props.driver);
     var rows = _.map(props.allPassenger, function (n) {
         return {
-            username: n.user.name,
-            created_date: n.created_at,
+            username: n.user?.name,
+            created_date: n.created_at
+                ? new Date(n.created_at).toDateString()
+                : "No Date",
             rate: n.rate,
         };
     });
@@ -129,7 +114,7 @@ const populateRedirectLink = () => {
         <GuestLayout :can-login="{ canLogin }" :can-register="{ canRegister }">
             <slot>
                 <main>
-                    <div class="relative px-6 lg:px-8">
+                    <div class="relative px-6 py-6 lg:px-8 bg-gray-50 rounded">
                         <div class="flex flex-row w-full">
                             <div class="flex flex-col basis-11/12">
                                 <p
@@ -180,7 +165,7 @@ const populateRedirectLink = () => {
                                 <!-- the items i want to put in a 3 grid layout !-->
                                 <div class="w-full">
                                     <div
-                                        class="border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700"
+                                        class="border border-gray-200 bg-white rounded-lg shadow dark:bg-gray-800 dark:border-gray-700"
                                     >
                                         <GoogleMap
                                             api-key="AIzaSyBJqBt3CdPyZ_Tt4bTaJxgEuz1mER18_zI"
@@ -226,7 +211,7 @@ const populateRedirectLink = () => {
                                 <!-- the items i want to put in a 3 grid layout !-->
                                 <div class="w-full">
                                     <div
-                                        class="border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700"
+                                        class="border border-gray-200 bg-white rounded-lg shadow dark:bg-gray-800 dark:border-gray-700"
                                     >
                                         <GoogleMap
                                             api-key="AIzaSyBJqBt3CdPyZ_Tt4bTaJxgEuz1mER18_zI"
@@ -273,7 +258,7 @@ const populateRedirectLink = () => {
                             <!-- the items i want to put in a 3 grid layout !-->
                             <div class="w-full">
                                 <div
-                                    class="border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700"
+                                    class="border border-gray-200 bg-white rounded-lg shadow dark:bg-gray-800 dark:border-gray-700"
                                 >
                                     <div class="p-5">
                                         <h5
@@ -319,12 +304,35 @@ const populateRedirectLink = () => {
                                             {{ detail.description }}
                                         </p>
                                         <hr class="mt-4 mb-4" />
-                                        <h5
-                                            class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white"
+                                        <p
+                                            class="text-2xl font-bold tracking-tight text-gray-900 sm:text-2xl"
                                         >
                                             Driver
-                                        </h5>
-                                        <div class="w-1/2 p-2 border-2 rounded">
+                                            <a
+                                                :href="
+                                                    route('driver.details', {
+                                                        id: props.detail
+                                                            .creator_id,
+                                                    })
+                                                "
+                                                class="float-right"
+                                            >
+                                                <svg
+                                                    aria-hidden="true"
+                                                    class="w-4 h-4 ml-2 -mr-1"
+                                                    fill="currentColor"
+                                                    viewBox="0 0 20 20"
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                >
+                                                    <path
+                                                        fill-rule="evenodd"
+                                                        d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
+                                                        clip-rule="evenodd"
+                                                    ></path>
+                                                </svg>
+                                            </a>
+                                        </p>
+                                        <div class="w-1/2 p-2">
                                             <div class="flex flex-row gap-1">
                                                 <div
                                                     class="flex flex-col basis-1/4 items-center border-r-2"
@@ -381,7 +389,7 @@ const populateRedirectLink = () => {
                             <!-- the items i want to put in a 3 grid layout !-->
                             <div class="w-full">
                                 <div
-                                    class="border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700"
+                                    class="border border-gray-200 bg-white rounded-lg shadow dark:bg-gray-800 dark:border-gray-700"
                                 >
                                     <div class="p-5">
                                         <h5

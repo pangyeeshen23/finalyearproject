@@ -8,6 +8,7 @@ use App\Http\Controllers\DriverController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\HomepageController;
 use App\Http\Controllers\TravelPlansController;
+use App\Http\Controllers\DashboardController;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,7 +26,7 @@ Route::get('/', [HomepageController::class, 'show'])->name('home');
 
 Route::group([ 'prefix' => 'driver'], function(Router $router){
     $router->get('/list', [DriverController::class, 'list'])->name('driver.list');
-    $router->post('/details', [DriverController::class, 'details'])->name('driver.details');
+    $router->get('/details', [DriverController::class, 'details'])->name('driver.details');
 });
 
 Route::group([ 'prefix' => 'travel-plan'], function(Router $router){
@@ -35,9 +36,7 @@ Route::group([ 'prefix' => 'travel-plan'], function(Router $router){
 });
 
 
-Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

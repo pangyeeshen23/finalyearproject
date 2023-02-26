@@ -10,7 +10,7 @@ import Rating from "@/Components/Rating.vue";
 
 const filter = {
     search: "",
-    rate: 0,
+    rateSortBy: 0,
 };
 
 defineProps({
@@ -20,12 +20,11 @@ defineProps({
 });
 
 const searchSubmit = () => {
-    console.log(filter);
     Inertia.get(
         "/driver/list",
         {
             search: filter.search,
-            rate: filter.rate,
+            rateSortBy: filter.rateSortBy,
         },
         {
             preserveState: true,
@@ -70,25 +69,14 @@ const populateImage = (imag_link) => {
                                         Rating Range
                                         <div>
                                             <select
-                                                id="rate_range"
-                                                v-model="filter.rate"
+                                                id="rateSortBy_range"
+                                                v-model="filter.rateSortBy"
                                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                             >
                                                 <option value="0" selected>
-                                                    Select a rate range
+                                                    Desc
                                                 </option>
-                                                <option value="1">
-                                                    0 star - 1 star
-                                                </option>
-                                                <option value="2">
-                                                    1 star - 2 star
-                                                </option>
-                                                <option value="3">
-                                                    3 star - 4 star
-                                                </option>
-                                                <option value="4">
-                                                    5 star - 5 star
-                                                </option>
+                                                <option value="1">Asc</option>
                                             </select>
                                         </div>
                                     </div>
@@ -179,9 +167,7 @@ const populateImage = (imag_link) => {
                                             >
                                                 {{ item.description }}
                                             </span>
-                                            <Rating
-                                                :rate="item.avgRate"
-                                            ></Rating>
+                                            <Rating :rate="item.rate"></Rating>
                                             <div
                                                 class="flex mt-4 space-x-3 md:mt-6"
                                             >

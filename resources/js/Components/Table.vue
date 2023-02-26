@@ -1,8 +1,16 @@
 <script setup>
+import Rating from "@/Components/Rating.vue";
+
 const props = defineProps({
     columns: Array,
     rows: Array,
 });
+
+const emit = defineEmits(["buttonClick"]);
+
+const emitAction = (action) => {
+    emit(action);
+};
 </script>
 
 <template>
@@ -22,7 +30,29 @@ const props = defineProps({
                 class="bg-white border-b dark:bg-gray-900 dark:border-gray-700"
             >
                 <td v-for="column in columns" class="px-6 py-4">
-                    {{ row[column.data] }}
+                    <a
+                        v-if="column.format == 'navigation'"
+                        :href="column.link + row[column.data]"
+                        class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                    >
+                        Details
+                    </a>
+                    <a
+                        v-else-if="
+                            column.format == 'rate' && row['rate'] == null
+                        "
+                        v-on:click="emitAction('buttonClick')"
+                        class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 cursor-pointer"
+                    >
+                        {{ column.buttonText }}
+                    </a>
+                    <Rating
+                        v-else-if="
+                            column.format == 'rate' && row['rate'] != null
+                        "
+                        :rate="row[column.data]"
+                    ></Rating>
+                    <p v-else-if="!column.format">{{ row[column.data] }}</p>
                 </td>
             </tr>
         </tbody>

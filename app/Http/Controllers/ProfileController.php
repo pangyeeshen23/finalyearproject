@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Inertia\Inertia;
+use App\Models\UserRoles;
 use Illuminate\Http\Request;
 use App\Models\UserTravelPlans;
 use Illuminate\Support\Facades\Auth;
@@ -20,9 +21,11 @@ class ProfileController extends Controller
      */
     public function edit(Request $request)
     {
+        $role = UserRoles::where('id', $request->user()->role_id)->first();
         return Inertia::render('Profile/Edit', [
             'mustVerifyEmail' => $request->user() instanceof MustVerifyEmail,
             'status' => session('status'),
+            'role' => $role->name,
         ]);
     }
 

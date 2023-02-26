@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use Inertia\Inertia;
 use App\Models\Drivers;
+use App\Models\TravelPlans;
 use Illuminate\Http\Request;
+use App\Models\UserTravelPlans;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
@@ -19,18 +21,60 @@ class DriverController extends Controller
     {
         $driverModel = new Drivers();
 
-        $rating = null;
-        
+        $sortBy = 'desc';
+       
         $driverModel =  $driverModel->whereHas('roles',function($query){
             $query->where('slug','driver');
-        })->withAvg('userTravelPlans','rate')->where('rate','=', $request->rate);
+        })->withAvg('userTravelPlans as rate','rate');
 
-        if($request->search && $request->search)  $driverModel = $driverModel->where('name', 'LIKE', '%'.$request->search.'%');
-        $drivers =  $driverModel->paginate(10);
+        if($request->search)  $driverModel = $driverModel->where('name', 'LIKE', '%'.$request->search.'%');
+        if($request->rateSortBy){
+            switch($request->rateSortBy){
+                case "0":
+                    $sortBy = "desc";
+                break;
+                case "1":
+                    $sortBy = "asc";
+                break;
+                default:
+                    $sortBy = 'desc';
+                break;
+            }
+        }
+        $drivers =  $driverModel->orderBy('rate', $sortBy)->paginate(10);
         return Inertia::render('Driver', [
             'canLogin' => Route::has('login'),
             'canRegister' => Route::has('register'),
             'drivers' => $drivers
+        ]);
+    }
+
+    public function details(Request $request)
+    {
+        $request->validate([
+            'id' => 'required'
+        ]);
+
+        $driverModel = new Drivers();
+        $sortBy = 'desc';
+        $driver =  $driverModel->whereHas('roles',function($query){
+            $query->where('slug','driver');
+        })->where('id', $request->id)->withAvg('userTravelPlans as rate','rate')
+        ->with('travelPlans', function($query){
+            $query->where('status', 1);
+        })->first();
+
+        $totalCompletedTravelPLans =  TravelPlans::where('creator_id', $request->id)->where('status', 3)->count();
+        $totalTravelPlans = TravelPlans::where('creator_id', $request->id)->count();
+        $totalRatingReceived = UserTravelPlans::where('creator_id', $request->id)->where('rate', '!=', null)->count();
+
+        return Inertia::render('DriverDetail', [
+            'canLogin' => Route::has('login'),
+            'canRegister' => Route::has('register'),
+            'driver' => $driver,
+            'totalCompletedTravelPLans' => $totalCompletedTravelPLans,
+            'totalTravelPlans' => $totalTravelPlans,
+            'totalRatingReceived' => $totalRatingReceived
         ]);
     }
 
