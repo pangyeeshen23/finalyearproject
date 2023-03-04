@@ -19,11 +19,11 @@ return new class extends Migration
             $table->string('description');
             $table->string('meeting_point');
             $table->string('depart_name');
-            $table->decimal('depart_lat');
-            $table->decimal('depart_long');
+            $table->float('depart_lat', 10, 8);
+            $table->float('depart_long', 11, 8);
             $table->string('destination_name');
-            $table->decimal('destination_lat');
-            $table->decimal('destination_long');
+            $table->float('destination_lat', 10, 8);
+            $table->float('destination_long', 11, 8);
             $table->decimal('fees');
             $table->boolean('is_student');
             $table->unsignedInteger('creator_id');

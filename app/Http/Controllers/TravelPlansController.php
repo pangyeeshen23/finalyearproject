@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
+use Inertia\Inertia;
 use App\Models\TravelPlans;
 use Illuminate\Http\Request;
 use App\Models\UserTravelPlans;
-use Inertia\Inertia;
 use Illuminate\Support\Facades\Route;
 
 class TravelPlansController extends Controller
@@ -67,7 +68,7 @@ class TravelPlansController extends Controller
         if($request->search && $request->search)  $travelModel = $travelModel->where('name', 'LIKE', '%'.$request->search.'%');
         if($minPrice)  $travelModel = $travelModel->where('fees','>=',$minPrice);
         if($maxPrice)  $travelModel = $travelModel->where('fees','<=',$maxPrice);
-        if($is_student_plan)  $travelModel = $travelModel->where('is_student',$is_student_plan);
+        if($request->travel_plan_type)  $travelModel = $travelModel->where('is_student',$is_student_plan);
         $travelModel = $travelModel->where('status', 1);
         $travelPlans =  $travelModel->paginate(10);
 
@@ -102,8 +103,10 @@ class TravelPlansController extends Controller
 
         $travelPlan = TravelPlans::find($request->travel_plan_id);
         $userTravelPlans = UserTravelPlans::find($request->travel_plan_id)->count();
+        $user = User::find($request->user_id);
 
-        if($userTravelPlans >= $travelPlan) return response()->BaseResponse('200','Travel Plan Passenger Limit', 'The Travel Plan has reached it maximun passenger number');
+        if($userTravelPlans >= $travelPlan->num_passengers) return response()->BaseResponse('500','Travel Plan Passenger Limit', 'The Travel Plan has reached it maximun passenger number');
+        if($travelPlan->is_student && $user->role_id != 2) return response()->BaseResponse('401','Student Only Travel Plan', 'This Travel Plan is for student only');
 
         try{
             $userTravelPlan = new UserTravelPlans();

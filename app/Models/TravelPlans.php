@@ -25,6 +25,7 @@ class TravelPlans extends Model
         'destination_long',
         'fees',
         'is_student',
+        'num_passengers',
         'created_at',
         'updated_at'
     ];

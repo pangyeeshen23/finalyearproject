@@ -23,6 +23,9 @@ const showLogin = ref(false);
 const showAlert = ref(false);
 const disabledButton = ref(false);
 
+var errorMsg = ref("");
+var showError = ref(false);
+
 const populateLatLong = (lat, long) => {
     var location = { lat: parseFloat(lat), lng: parseFloat(long) };
     return location;
@@ -96,6 +99,12 @@ const acceptJoinTravelPlan = (user) => {
         .then(() => {
             location.reload();
             disabledButton.value = false;
+        })
+        .catch(function (error) {
+            var res = error.response.data;
+            errorMsg.value = res.exceptions;
+            showError.value = true;
+            console.log(showError);
         });
 };
 
@@ -158,6 +167,15 @@ const populateRedirectLink = () => {
                         >
                             <span class="font-medium">
                                 Successfully Joined Travel Plan!
+                            </span>
+                        </div>
+                        <div
+                            v-if="showError"
+                            class="p-4 mt-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400"
+                            role="alert"
+                        >
+                            <span class="font-medium">
+                                {{ errorMsg }}
                             </span>
                         </div>
                         <div class="grid grid-cols-2 gap-4">
