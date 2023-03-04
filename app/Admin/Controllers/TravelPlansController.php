@@ -65,11 +65,25 @@ class TravelPlansController extends AdminController
         $show->field('destination_name', __('Destination Location Name'));
         $show->field(__('Destination'))->latlong('destination_lat', 'destination_long','destination_lat', 'destination_long', $height = 400, $zoom = 15);
         $show->field('fees', __('Fees'));
-        $show->field('is_student', __('For student only ?'));
+        $show->field('is_student', __('For student only ?'))->using([ 0 => "No", 1 => "Yes"]);
         $show->field('status')->using([ 1 => 'Pending', 2 => 'In Progress', 3 => 'Complete']);
-        $show->admins('Creator Information', function($creator){
+        $show->creator('Creator Information', function($creator){
             $creator->id();
             $creator->name();
+        });
+        $show->userTravelPlans('Passengers', function($passenger){
+            $passenger->disableFilter();
+
+            $passenger->disableCreateButton();
+            $passenger->disableRowSelector();
+            $passenger->disableActions();
+            $passenger->actions(function ($actions) {
+                $actions->disableDelete();
+                $actions->disableEdit();
+                $actions->disableView();
+            });
+            $passenger->user()->name();
+            $passenger->rate();
         });
         $show->field('created_at', __('Created at'));
         $show->field('updated_at', __('Updated at'));

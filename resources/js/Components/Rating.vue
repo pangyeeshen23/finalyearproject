@@ -12,8 +12,13 @@ const emit = defineEmits(["updateRate"]);
 
 const populateClass = (index) => {
     var floorRate = Math.floor(props.rate);
-    if (floorRate && floorRate >= index) return "w-5 h-5 text-yellow-400";
-    else return "w-5 h-5 text-gray-300 dark:text-gray-500";
+    var style = "";
+    if (floorRate && floorRate >= index) style = "w-5 h-5 text-yellow-400";
+    else style = "w-5 h-5 text-gray-300 dark:text-gray-500";
+
+    if (props.clickable) style += " cursor-pointer";
+
+    return style;
 };
 
 const populateRateText = () => {
