@@ -82,7 +82,10 @@ const maxWidthClass = computed(() => {
 
 const submit = () => {
     form.post(route("login"), {
-        onFinish: () => form.reset("password"),
+        onSuccess: () => {
+            form.reset();
+            close();
+        },
     });
 };
 </script>

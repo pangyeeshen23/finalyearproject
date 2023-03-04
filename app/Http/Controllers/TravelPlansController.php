@@ -102,9 +102,8 @@ class TravelPlansController extends Controller
         ]);
 
         $travelPlan = TravelPlans::find($request->travel_plan_id);
-        $userTravelPlans = UserTravelPlans::find($request->travel_plan_id)->count();
+        $userTravelPlans = UserTravelPlans::where('travel_plans_id',$request->travel_plan_id)->count();
         $user = User::find($request->user_id);
-
         if($userTravelPlans >= $travelPlan->num_passengers) return response()->BaseResponse('500','Travel Plan Passenger Limit', 'The Travel Plan has reached it maximun passenger number');
         if($travelPlan->is_student && $user->role_id != 2) return response()->BaseResponse('401','Student Only Travel Plan', 'This Travel Plan is for student only');
 

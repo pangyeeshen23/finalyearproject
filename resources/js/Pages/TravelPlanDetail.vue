@@ -47,7 +47,6 @@ const columns = [
 ];
 
 const formatPassengerRows = () => {
-    console.log(props.driver);
     var rows = _.map(props.allPassenger, function (n) {
         return {
             username: n.user?.name,
