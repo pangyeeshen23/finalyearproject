@@ -68,7 +68,7 @@ class TravelPlansController extends Controller
         if($minPrice)  $travelModel = $travelModel->where('fees','>=',$minPrice);
         if($maxPrice)  $travelModel = $travelModel->where('fees','<=',$maxPrice);
         if($is_student_plan)  $travelModel = $travelModel->where('is_student',$is_student_plan);
-        
+        $travelModel = $travelModel->where('status', 1);
         $travelPlans =  $travelModel->paginate(10);
 
         return Inertia::render('TravelPlan', [
@@ -119,11 +119,11 @@ class TravelPlansController extends Controller
     
     public function rate(Request $request){
         $request->validate([
-            'user_travel_plan_id' => 'required',
+            'travel_plan_id' => 'required',
             'rate' => 'required',
         ]);
 
-        $userTravelPlans  = UserTravelPlans::find($request->user_travel_plan_id);
+        $userTravelPlans  = UserTravelPlans::find($request->travel_plan_id);
         $userTravelPlans->rate = $request->rate;
         $userTravelPlans->save();
 

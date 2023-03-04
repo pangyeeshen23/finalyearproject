@@ -2,14 +2,32 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head } from "@inertiajs/inertia-vue3";
 import Table from "@/Components/Table.vue";
+import { computed } from "vue";
+import axios from "axios";
 
 var props = defineProps({
     totalPlanCount: Number,
     rateGivenCount: Number,
     totalSpending: Number,
-    historyTravelPlans: Number,
+    historyTravelPlans: Array,
 });
 
+var rows = computed(() => {
+    var format = _.map(props.historyTravelPlans, function (n) {
+        return {
+            id: n.id,
+            name: n.travel_plan?.name,
+            depart_name: n.travel_plan?.depart_name,
+            destination_name: n.travel_plan?.destination_name,
+            fees: n.travel_plan?.fees,
+            rate: n.rate,
+            created_date: n.travel_plan?.created_at
+                ? new Date(n.travel_plan?.created_at).toDateString()
+                : "No Date",
+        };
+    });
+    return format;
+});
 const columns = [
     {
         display: "Travel Plan",
@@ -34,30 +52,28 @@ const columns = [
     {
         display: "Action",
         format: "rate",
+        clickable: true,
         buttonText: "Rate",
-        data: "id",
+        data: "rate",
     },
 ];
 
-const formatTravelPlans = () => {
-    var rows = _.map(props.historyTravelPlans, function (n) {
-        return {
-            id: n.id,
-            name: n.travel_plan?.name,
-            depart_name: n.travel_plan?.depart_name,
-            destination_name: n.travel_plan?.destination_name,
-            fees: n.travel_plan?.fees,
-            rate: n.rate,
-            created_date: n.travel_plan?.created_at
-                ? new Date(n.travel_plan?.created_at).toDateString()
-                : "No Date",
-        };
-    });
-    return rows;
-};
-
-const showRateModel = () => {
-    console.log("Hello");
+const updateRate = async (rate) => {
+    var row = _.find(props.historyTravelPlans, { id: rate.id });
+    if (row) {
+        let updatedRow = row;
+        updatedRow.rate = rate.rate;
+        await axios
+            .post("/travel-plan/rate", {
+                travel_plan_id: rate.id,
+                rate: rate.rate,
+            })
+            .then(() => {
+                location.reload();
+                disabledButton.value = false;
+            });
+        _.merge(props.historyTravelPlans, updatedRow);
+    }
 };
 </script>
 
@@ -167,8 +183,9 @@ const showRateModel = () => {
                     >
                         <Table
                             :columns="columns"
-                            :rows="formatTravelPlans()"
-                            @buttonClick="showRateModel()"
+                            :rows.sync="rows"
+                            @buttonClick="showRateModel(id)"
+                            @updateRate="updateRate"
                         ></Table>
                     </div>
                 </div>

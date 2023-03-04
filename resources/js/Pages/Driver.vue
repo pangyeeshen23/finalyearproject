@@ -142,6 +142,9 @@ const populateImage = (imag_link) => {
 
                                 <div
                                     class="p-4 grid grid-cols-4 gap-4 mt-6 bg-gray-50 w-full"
+                                    v-if="
+                                        drivers.data && drivers.data.length > 0
+                                    "
                                 >
                                     <div
                                         class="max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700"
@@ -200,6 +203,12 @@ const populateImage = (imag_link) => {
                                             </div>
                                         </div>
                                     </div>
+                                </div>
+                                <div
+                                    class="p-4 mt-6 bg-gray-50 w-full text-center"
+                                    v-else
+                                >
+                                    <p>No Driver Plan is Available</p>
                                 </div>
                                 <div>
                                     <Pagination

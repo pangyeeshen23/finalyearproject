@@ -6,10 +6,14 @@ const props = defineProps({
     rows: Array,
 });
 
-const emit = defineEmits(["buttonClick"]);
+const emit = defineEmits(["buttonClick", "updateRate"]);
 
 const emitAction = (action) => {
     emit(action);
+};
+
+const updateRate = (rate) => {
+    emit("updateRate", rate);
 };
 </script>
 
@@ -37,20 +41,12 @@ const emitAction = (action) => {
                     >
                         Details
                     </a>
-                    <a
-                        v-else-if="
-                            column.format == 'rate' && row['rate'] == null
-                        "
-                        v-on:click="emitAction('buttonClick')"
-                        class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 cursor-pointer"
-                    >
-                        {{ column.buttonText }}
-                    </a>
                     <Rating
-                        v-else-if="
-                            column.format == 'rate' && row['rate'] != null
-                        "
+                        v-else-if="column.format == 'rate'"
                         :rate="row[column.data]"
+                        :clickable="column.clickable"
+                        :row.sync="row"
+                        @updateRate="updateRate"
                     ></Rating>
                     <p v-else-if="!column.format">{{ row[column.data] }}</p>
                 </td>

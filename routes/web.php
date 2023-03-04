@@ -33,6 +33,7 @@ Route::group([ 'prefix' => 'travel-plan'], function(Router $router){
     $router->get('/list', [TravelPlansController::class, 'list'])->name('travelPlans.list');
     $router->get('/details', [TravelPlansController::class, 'details'])->name('travelPlans.details');
     $router->post('/join', [TravelPlansController::class, 'join'])->name('travelPlans.join');
+    $router->post('/rate', [TravelPlansController::class, 'rate'])->name('travelPlans.rate');
 });
 
 

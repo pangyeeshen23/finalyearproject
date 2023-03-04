@@ -180,6 +180,10 @@ const populateLatLong = (lat, long) => {
 
                                 <div
                                     class="p-4 grid grid-cols-4 gap-4 mt-6 bg-gray-50 w-full"
+                                    v-if="
+                                        travelPlans.data &&
+                                        travelPlans.data.length > 0
+                                    "
                                 >
                                     <div
                                         class="max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700"
@@ -246,6 +250,12 @@ const populateLatLong = (lat, long) => {
                                             </a>
                                         </div>
                                     </div>
+                                </div>
+                                <div
+                                    class="p-4 mt-6 bg-gray-50 w-full text-center"
+                                    v-else
+                                >
+                                    <p>No Travel Plan is Available</p>
                                 </div>
                                 <div>
                                     <Pagination
